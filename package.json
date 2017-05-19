@@ -1,0 +1,28 @@
+{
+  "name": "nodejs-docker-template",
+  "version": "1.0.0",
+  "description": "Template repo for a Dockerizable NodeJS microservice",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "./bin/start.sh",
+    "stop": "./bin/stop.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djaqua/nodejs-docker-template.git"
+  },
+  "author": "anjaqua@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djaqua/nodejs-docker-template/issues"
+  },
+  "homepage": "https://github.com/djaqua/nodejs-docker-template#readme",
+  "dependencies": {
+    "config": "^1.26.1",
+    "yargs": "^8.0.1"
+  },
+  "devDependencies": {
+    "pm2": "^2.4.6"
+  }
+}
