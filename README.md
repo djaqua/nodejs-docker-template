@@ -39,13 +39,12 @@ has more information about the order in which the configuration files are
 processed. 
 
 ### Developing at the NodeJS Layer 
-npm run start
-npm run stop
-
-npm --save-dev install <package> 
-npm --save install <package>
-npm install <package>
-npm -g install <cli-package>
+* npm run start
+* npm run stop
+* npm --save-dev install *package* 
+* npm --save install *package*
+* npm install *package*
+* npm -g install *cli-package*
 
 ### PM2 Layer
 You don't need to install PM2 globally (sudo npm -g install pm2) if you 
@@ -68,32 +67,32 @@ for  * node\_modules/.bin/pm2 (pm2\*\*) start src/server.js
 
 ### Docker Image Layer 
 
-Build the microservice docker image:
-  docker build -t microservice .
+  1. Build the microservice docker image  
+    **docker build -t _microservice_ .**  
+    
+  2. List available images  
+    **docker images**  
+    
+  3. Run the mocroservice docker image  
+    **docker run _image-id_**  
 
-List available images
-  docker images
-
-Run the mocroservice docker image:
-  docker run <image-id> 
-
-Remove an image
-  docker rmi <image-id> 
+  4. Remove an image  
+    **docker rmi _image-id_**  
 
 
 ### Docker Container Layer
-List the running containers
-  docker ps 
-
-List all the containers
-  docker ps -a
-
-Observe the microservice logs 
-  docker logs <container-id>
-
-Start and stop the microservice
-  docker stop <container-id>
-  docker start <container-id>
+  1. List the running containers  
+    **docker ps**  
+     
+  2. List all the containers  
+    **docker ps -a**  
+    
+  3. Observe the microservice logs  
+    **docker logs _container-id_**  
+    
+  4. Start and stop the microservice  
+    **docker stop _container-id_**  
+    **docker start _container-id_**  
 
 
 
