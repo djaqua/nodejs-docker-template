@@ -52,26 +52,18 @@ For simplicity and consistency, the package scripts use pm2 to start and stop th
 ### PM2 Layer
 You don't need to install PM2 globally (sudo npm -g install pm2) if you 
 took the easy route and sourced the SourceMe file. That will install PM2 
-locally (for development) and add the dependency bin directory to $PATH. 
-
-If you initialized the project manually, then it
-for  * node\_modules/.bin/pm2 (pm2\*\*) start src/server.js  
-
-
-* pm2 start src/server.js  
-    
-* pm2 status - lists the stops the microservice 
-
-* pm2 log 0 
-* pm2 stop 0 - stops the microservice 
-
+locally (for development) and add the dependency bin directory to $PATH.  
+   **pm2 start src/server.js**  - starts the microservice  
+   **pm2 status** - lists the stops the microservice  
+   **pm2 log _process-id_** - tails the PM2 and microservice logs  
+   **pm2 stop _process-id_** - stops the microservice  
     
 ## Deployment
 
 ### Docker Image Layer 
 
   1. Build the microservice docker image  
-    **docker build -t _microservice_ .**  
+    **docker build -t _microservice-name_ .**  
     
   2. List available images  
     **docker images**  
