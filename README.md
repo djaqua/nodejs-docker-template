@@ -38,12 +38,16 @@ has more information about the order in which the configuration files are
 processed. 
 
 ### Developing at the NodeJS Layer 
-  * npm run start
-  * npm run stop
-  * npm --save-dev install *package* 
-  * npm --save install *package*
-  * npm install *package*
-  * npm -g install *cli-package*
+For simplicity and consistency, the package scripts use pm2 to start and stop the microservice.  
+  1. Start and stop the server through the package  
+   **npm run start** - uses the development dependency version of PM2 to start the microservice  
+   **npm run nuke** - stops the microservice, flushes the logs, and deletes the server process  
+
+  2. Add and remove modules and packages to the microservice  
+   **npm --save-dev install _package_**  
+   **npm --save install _package_**  
+   **npm install _package_**  
+   **npm -g install _cli-package_**  
 
 ### PM2 Layer
 You don't need to install PM2 globally (sudo npm -g install pm2) if you 
