@@ -7,14 +7,13 @@ Starting in the root directory of this repository
 (e.g. ~/projects/nodejs-docker-template), run the following commands:
     
 Make life easy by sourcing the SourceMe file:
-**source SourceMe**
-    Use this 
-    - obtain useful aliases and environment variables for this template
-    - run a bunch of boilerplate operations
+  1. **source SourceMe**  
+     - obtain useful aliases and environment variables for this template  
+     - run a bunch of boilerplate operations  
 
-Or do it manually because pain is what makes us human:
-**nvm install** - installs the correct version of NodeJS
-**npm install** - installs the microservice dependencies
+Or do it manually because pain is what makes us human:  
+  1. **nvm install** - installs the correct version of NodeJS  
+  2. **npm install** - installs the microservice dependencies  
 
 
 ## Developing the Microservice
@@ -28,7 +27,7 @@ prefered over static configurations (e.g. configuration files).
 
 
 
-#### Configuration
+### Configuration
 This microservice uses a layered configuration based on both command line 
 arguments and configuration files in the config directory. The configuration 
 files are processed so that the last (and most specific) configuration is the 
@@ -39,12 +38,12 @@ has more information about the order in which the configuration files are
 processed. 
 
 ### Developing at the NodeJS Layer 
-* npm run start
-* npm run stop
-* npm --save-dev install *package* 
-* npm --save install *package*
-* npm install *package*
-* npm -g install *cli-package*
+  * npm run start
+  * npm run stop
+  * npm --save-dev install *package* 
+  * npm --save install *package*
+  * npm install *package*
+  * npm -g install *cli-package*
 
 ### PM2 Layer
 You don't need to install PM2 globally (sudo npm -g install pm2) if you 
