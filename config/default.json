@@ -1,4 +1,51 @@
 {
-    "filename": "default.json"
+    "filename": "default.json",
+
+    "logging": {
+        
+		"level": "info",
+			
+        "logsDir": "logs",	
+
+        "defaultLogfile":"combined",	
+        "useDatedFilenames": true,	
+        "fileExtension": "log",	
+
+        "dateFormatStr": "yyyymmdd_hhMMss",
+        "useColors": true,
+
+		"levels": {
+			"emergency": 0,
+			"alert": 	 1,
+			"critical":  2,
+			"error": 	 3,
+			"warning": 	 4,
+			"notice": 	 5,
+			"info": 	 6,
+			"debug": 	 7
+		},
+        
+        "files": {
+            "emergency": "errors",
+            "alert": 	 "errors",
+            "critical":  "errors",
+            "error": 	 "errors",
+            "warning": 	 "general",
+            "notice": 	 "general",
+            "info": 	 "general",
+            "debug": 	 "general"
+        },
+        
+        "colors": {
+            "emergency": "red",
+            "alert": 	 "red",
+            "critical":	 "red",
+            "error": 	 "red",
+            "warning": 	 "yellow",
+            "notice": 	 "blue",
+            "info": 	 "white",
+            "debug": 	 "white"
+        }
+	}
 }
 

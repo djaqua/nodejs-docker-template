@@ -1,8 +1,16 @@
+/*
+ * Author: anjaqua@gmail.com
+ * Desription: 
+ *   Responsible for configuring and initializing the server. Provides the 
+ */
 
-var konf = require("./konf");
+var config = require("./konf").getConfig();
 
-console.log("Server using top level configuration file " + konf.getConfig().filename);
+var logger = require("./logging").getLogger();
+logger.notice("Using top level configuration file '" + config.filename + "'");
+
+
 setInterval(function() {
-    console.log("heartbeat");
+    logger.info("heartbeat");
 }, 10000);
 
