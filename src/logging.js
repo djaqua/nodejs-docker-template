@@ -6,50 +6,57 @@ var uuid = require('uuid');
 var config = require('./konf').getConfig().logging;
 var cache = {};
 
-if (config.useColors) {
-    winston.addColors(config.colors);
+if (config.winston.useColors) {
+    winston.addColors(config.winston.colors);
 }
 
 var createConsoleTransport = function() {
     return new (winston.transports.Console)({
         name: uuid.v4(),
-        colorize: true
+        colorize: config.winston.useColors
     });
 };
 
-var createFileTransport = function(level) {
-    
-    var filenameWithPath = getFilenameWithPath(level);
+var getFileTransports = function() {
+    return _.map( _.values(config.winston.transports.file), function(template) {
+        return createFileTransport( template );
+    } );
+};
 
-	return new (winston.transports.File)({
-      name: level + '-file',
-      filename: filenameWithPath,
-      level: level
+var createFileTransport = function(template) {
+    var logfile = template.filename ? template.filename : config.winston.filenames.defaultFilename;
+    return new (winston.transports.File)({
+        name: uuid.v4(),
+        level: template.level,
+        showLevel: template.showLevel,
+        timestamp: template.timestamp,
+        label: template.label,
+        filename: getFilenameWithPath(logfile)
     });
 };
 
 var getLogsDir = function() {
     if (!cache.logsDir) {
-		 cache.logsDir = (config.logsDir ? config.logsDir : ".");
+        cfgLogsDir = config.winston.filenames.logsDir;     
+		cache.logsDir = (cfgLogsDir ? cfgLogsDir : ".");
 	}
     return cache.logsDir;
 }
 
-var getFilenameWithPath = function(level) {
-   return getLogsDir() + "/" + getFilename(level);
+var getFilenameWithPath = function(name) {
+   return getLogsDir() + "/" + getFilename(name);
 };
 
-var getFilename = function(level) {
-    
-	var logfile = config.files[level] ? config.files[level] : config.defaultLogfile;
+var getFilename = function(logfile) {
 
 	if (!cache.logFilenameBuilder) {
 		
-		var logfileExtension = (config.fileExtension ? config.fileExtension : "out");
+        var cfgFileExtension = config.winston.filenames.fileExtension;
+		var logfileExtension = (cfgFileExtension ? cfgFileExtension : "out");
 			
-		if (config.useDatedFilenames) {
+		if (config.winston.filenames.useDatedFilenames) {
 			cache.logFilenameBuilder = function(logfile) {
-				logfile += "-" + dateFormat(new Date(), config.dateFormatStr); 
+				logfile += "-" + dateFormat(new Date(), config.winston.filenames.dateFormatStr); 
 				logfile += "." + logfileExtension;
 				return logfile;
 			};
@@ -65,24 +72,14 @@ var getFilename = function(level) {
 
 module.exports = {
     
-    getLogLevels : function() {
-        if (!cache.logLevels) {
-            cache.logLevels = _.keys(config.levels);
-        }
-        return cache.logLevels;
-    },
 
     getLogger : function() {
         if (!cache.logger) {
-         
-            var fileTransports = _.map(this.getLogLevels(), function(level) {
-                return createFileTransport(level);
-            });
 
             cache.logger = new (winston.Logger)({
-                level: config.level,
-                levels: config.levels,
-                transports: _.flattenDeep([fileTransports, createConsoleTransport()])
+                level: config.winston.level,
+                levels: config.winston.levels,
+                transports: _.flattenDeep([getFileTransports(), createConsoleTransport()])
             });
         }
         return cache.logger;

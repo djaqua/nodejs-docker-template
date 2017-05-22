@@ -7,10 +7,11 @@
 var config = require("./konf").getConfig();
 
 var logger = require("./logging").getLogger();
+
 logger.notice("Using top level configuration file '" + config.filename + "'");
 
 
 setInterval(function() {
-    logger.info("heartbeat");
+    logger.debug("heartbeat");
 }, 10000);
 
