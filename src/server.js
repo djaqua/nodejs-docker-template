@@ -12,6 +12,7 @@ logger.notice("Using top level configuration file '" + config.filename + "'");
 
 
 setInterval(function() {
-    logger.debug("heartbeat");
+    logger.info("heartbeat (info)");
+    logger.debug("heartbeat (debug)");
 }, 10000);
 

@@ -35,6 +35,17 @@ var createFileTransport = function(template) {
     });
 };
 
+var cache = {
+    /*
+     * Encapsulates the current configured state of the logger. This cache is 
+     * intended to save repetitive calls to commonly used objects and 
+     * functions. There's probably a better way to keep this stuff "disposable"
+     * and out of the anonymous exports, but this works for now.
+     */
+};
+
+
+
 var getLogsDir = function() {
     if (!cache.logsDir) {
         cfgLogsDir = config.winston.filenames.logsDir;     
@@ -70,17 +81,22 @@ var getFilename = function(logfile) {
 	return cache.logFilenameBuilder(logfile);	
 };
 
+var createNewLogger = function() {
+    // it is NOT the business of this factory method to cache instances 
+    // returned.   
+    return new (winston.Logger)({
+        level: config.winston.level,
+        levels: config.winston.levels,
+        transports: _.flattenDeep([getFileTransports(), createConsoleTransport()])
+    });
+};
+
 module.exports = {
     
 
     getLogger : function() {
         if (!cache.logger) {
-
-            cache.logger = new (winston.Logger)({
-                level: config.winston.level,
-                levels: config.winston.levels,
-                transports: _.flattenDeep([getFileTransports(), createConsoleTransport()])
-            });
+            cache.logger = createNewLogger();
         }
         return cache.logger;
     }
