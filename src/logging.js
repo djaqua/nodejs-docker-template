@@ -3,28 +3,27 @@ var _ = require('lodash');
 var dateFormat = require('dateformat');
 var uuid = require('uuid');
 
-var config = require('./konf').getConfig().logging;
-var cache = {};
+var conf = require('./configuration').getConfig().logging;
 
-if (config.winston.useColors) {
-    winston.addColors(config.winston.colors);
+if (conf.winston.useColors) {
+    winston.addColors(conf.winston.colors);
 }
 
 var createConsoleTransport = function() {
     return new (winston.transports.Console)({
         name: uuid.v4(),
-        colorize: config.winston.useColors
+        colorize: conf.winston.useColors
     });
 };
 
 var getFileTransports = function() {
-    return _.map( _.values(config.winston.transports.file), function(template) {
+    return _.map( _.values(conf.winston.transports.file), function(template) {
         return createFileTransport( template );
     } );
 };
 
 var createFileTransport = function(template) {
-    var logfile = template.filename ? template.filename : config.winston.filenames.defaultFilename;
+    var logfile = template.filename ? template.filename : conf.winston.filenames.defaultFilename;
     return new (winston.transports.File)({
         name: uuid.v4(),
         level: template.level,
@@ -37,7 +36,7 @@ var createFileTransport = function(template) {
 
 var cache = {
     /*
-     * Encapsulates the current configured state of the logger. This cache is 
+     * Encapsulates the current conf.red state of the logger. This cache is 
      * intended to save repetitive calls to commonly used objects and 
      * functions. There's probably a better way to keep this stuff "disposable"
      * and out of the anonymous exports, but this works for now.
@@ -48,7 +47,7 @@ var cache = {
 
 var getLogsDir = function() {
     if (!cache.logsDir) {
-        cfgLogsDir = config.winston.filenames.logsDir;     
+        cfgLogsDir = conf.winston.filenames.logsDir;     
 		cache.logsDir = (cfgLogsDir ? cfgLogsDir : ".");
 	}
     return cache.logsDir;
@@ -62,12 +61,12 @@ var getFilename = function(logfile) {
 
 	if (!cache.logFilenameBuilder) {
 		
-        var cfgFileExtension = config.winston.filenames.fileExtension;
+        var cfgFileExtension = conf.winston.filenames.fileExtension;
 		var logfileExtension = (cfgFileExtension ? cfgFileExtension : "out");
 			
-		if (config.winston.filenames.useDatedFilenames) {
+		if (conf.winston.filenames.useDatedFilenames) {
 			cache.logFilenameBuilder = function(logfile) {
-				logfile += "-" + dateFormat(new Date(), config.winston.filenames.dateFormatStr); 
+				logfile += "-" + dateFormat(new Date(), conf.winston.filenames.dateFormatStr); 
 				logfile += "." + logfileExtension;
 				return logfile;
 			};
@@ -85,8 +84,8 @@ var createNewLogger = function() {
     // it is NOT the business of this factory method to cache instances 
     // returned.   
     return new (winston.Logger)({
-        level: config.winston.level,
-        levels: config.winston.levels,
+        level: conf.winston.level,
+        levels: conf.winston.levels,
         transports: _.flattenDeep([getFileTransports(), createConsoleTransport()])
     });
 };

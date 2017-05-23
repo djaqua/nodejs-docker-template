@@ -1,5 +1,40 @@
 {
     "filename": "production.json",
-    "port": 80
+    
+    "logging": {
+    
+        "winston": {
+            
+            "level": "info",
+            "useColors": false,
+
+            "transports" : {
+
+                "file": {
+
+                    "general": {
+                        "level": "info"
+                    },
+                    "problems": {
+                        "level": "warning"
+                    }
+                },
+                "console": {
+
+                    "general": {
+                        "silent": true,
+                        "colorize": false
+                    }
+                },
+                "http": {
+
+                    "general": {
+                        "port": 443,
+                        "ssl": true
+                    }
+                }
+            }
+        }
+   	}
 }
 

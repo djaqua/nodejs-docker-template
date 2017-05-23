@@ -1,10 +1,33 @@
 {
     "filename": "development.json",
     
-    "port": 8080,
-
     "logging": {
-        "level": "debug"
-    }
+    
+        "winston": {
+            
+            "level": "debug",
+            "useColors": true,
+            "filenames": {
+                "useDatedFilenames": false,
+                "dateFormatStr": "yyyymmdd"
+
+            },
+
+            "transports": {
+                "file": {
+                    "general" : {
+                        "level" : "debug"
+                    }
+                },
+                "console": {
+                    "general" : {
+                        "level" : "debug",
+                        "timestamp": true
+                    }
+                }
+            }
+
+        }
+   	}
 }
 

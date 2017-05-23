@@ -42,7 +42,7 @@
             "transports" : {
                 "file": {
                     "general": {
-                        "level": "debug",
+                        "level": "info",
                         "label": true,
                         "filename": "general",
                         "showLevel": true,
