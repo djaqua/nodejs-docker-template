@@ -52,11 +52,28 @@ For simplicity and consistency, the package scripts use pm2 to start and stop th
 ### PM2 Layer
 You don't need to install PM2 globally (sudo npm -g install pm2) if you 
 took the easy route and sourced the SourceMe file. That will install PM2 
-locally (for development) and add the dependency bin directory to $PATH.  
-   **pm2 start src/server.js**  - starts the microservice  
-   **pm2 status** - lists the stops the microservice  
-   **pm2 log _process-id_** - tails the PM2 and microservice logs  
-   **pm2 stop _process-id_** - stops the microservice  
+locally (for development) and add the dependency bin directory to $PATH.
+
+Here are some useful commands for administering pm2 processes:
+
+  1. Start the microservice  
+      **pm2 start src/server.js**
+    
+  2. Show the status of a process or omit the process-id to show the status of all processes  
+      **pm2 status _process-id_**
+     
+  3. Tail the log for a process or omit the process-id to tail the combined log for all processes  
+      **pm2 log _process-id_**  
+
+  4. Stop a process  
+      **pm2 stop _process-id_**
+      
+  5. Flush the logs  
+      **pm2 flush**     
+      
+  6. Delete a process  
+      **pm2 delete _process-id_**
+
     
 ## Deployment
 
