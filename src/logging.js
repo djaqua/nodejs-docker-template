@@ -17,7 +17,6 @@ var createConsoleTransport = function() {
 };
 
 var getFileTransports = function() {
-    
     return _.map( _.values(conf('logging.winston.transports.file')), function(template) {
         return createFileTransport( template );
     } );
@@ -52,7 +51,7 @@ var getLogsDir = function() {
     if (!cache.logsDir) {
         // by contract, conf won't cache default values
         cache.logsDir = conf('logging.winston.filenames.logsDir', '.') + "/";     
-	}
+    }
     return cache.logsDir;
 }
 
@@ -86,19 +85,14 @@ var createNewLogger = function() {
         level: conf('logging.winston.level'),
         levels: conf('logging.winston.levels'),
         transports: _.flattenDeep([getFileTransports(), createConsoleTransport()])
-        //transports: _.flattenDeep([createConsoleTransport()])
     });
 };
 
 module.exports = {
-    
-
     getLogger : function() {
         if (!cache.logger) {
             cache.logger = createNewLogger();
         }
         return cache.logger;
     }
-
 };
-
