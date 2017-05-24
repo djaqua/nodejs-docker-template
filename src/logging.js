@@ -3,27 +3,28 @@ var _ = require('lodash');
 var dateFormat = require('dateformat');
 var uuid = require('uuid');
 
-var conf = require('./configuration').getConfig().logging;
+var conf = require('./configuration');
 
-if (conf.winston.useColors) {
-    winston.addColors(conf.winston.colors);
+if (conf('logging.winston.useColors')) {
+    winston.addColors(true);
 }
 
 var createConsoleTransport = function() {
     return new (winston.transports.Console)({
         name: uuid.v4(),
-        colorize: conf.winston.useColors
+        colorize: conf('logging.winston.useColors')
     });
 };
 
 var getFileTransports = function() {
-    return _.map( _.values(conf.winston.transports.file), function(template) {
+    
+    return _.map( _.values(conf('logging.winston.transports.file')), function(template) {
         return createFileTransport( template );
     } );
 };
 
 var createFileTransport = function(template) {
-    var logfile = template.filename ? template.filename : conf.winston.filenames.defaultFilename;
+    var logfile = template.filename ? template.filename : conf('logging.winston.filenames.defaultFilename');
     return new (winston.transports.File)({
         name: uuid.v4(),
         level: template.level,
@@ -43,30 +44,28 @@ var cache = {
      */
 };
 
-
+var getFilenameWithPath = function(name) {
+   return getLogsDir() + getFilename(name);
+};
 
 var getLogsDir = function() {
     if (!cache.logsDir) {
-        cfgLogsDir = conf.winston.filenames.logsDir;     
-		cache.logsDir = (cfgLogsDir ? cfgLogsDir : ".");
+        // by contract, conf won't cache default values
+        cache.logsDir = conf('logging.winston.filenames.logsDir', '.') + "/";     
 	}
     return cache.logsDir;
 }
-
-var getFilenameWithPath = function(name) {
-   return getLogsDir() + "/" + getFilename(name);
-};
 
 var getFilename = function(logfile) {
 
 	if (!cache.logFilenameBuilder) {
 		
-        var cfgFileExtension = conf.winston.filenames.fileExtension;
-		var logfileExtension = (cfgFileExtension ? cfgFileExtension : "out");
+        var logfileExtension = conf('logging.winston.filenames.fileExtension', 
+                                    'out');
 			
-		if (conf.winston.filenames.useDatedFilenames) {
+		if (conf('logging.winston.filenames.useDatedFilenames')) {
 			cache.logFilenameBuilder = function(logfile) {
-				logfile += "-" + dateFormat(new Date(), conf.winston.filenames.dateFormatStr); 
+				logfile += "-" + dateFormat(new Date(), conf('logging.winston.filenames.dateFormatStr')); 
 				logfile += "." + logfileExtension;
 				return logfile;
 			};
@@ -84,9 +83,10 @@ var createNewLogger = function() {
     // it is NOT the business of this factory method to cache instances 
     // returned.   
     return new (winston.Logger)({
-        level: conf.winston.level,
-        levels: conf.winston.levels,
+        level: conf('logging.winston.level'),
+        levels: conf('logging.winston.levels'),
         transports: _.flattenDeep([getFileTransports(), createConsoleTransport()])
+        //transports: _.flattenDeep([createConsoleTransport()])
     });
 };
 

@@ -60,6 +60,15 @@ locally (for development) and add the dependency bin directory to $PATH.
     
 ## Deployment
 
+  1. Utilize the configuration layer by providing command line arguments 
+  to override those settings. 
+
+    a. Passing command line arguments through PM2:
+        pm2 start src/server.js -x -- --loglevel=debug --num=2 --str=Hello
+
+    b. Passing command line arguments through Node:
+        node -- --loglevel=debug
+
 ### Docker Image Layer 
 
   1. Build the microservice docker image  
