@@ -19,9 +19,9 @@ Or do it manually because pain is what makes us human:
 ## Developing the Microservice
 
 ### Architectural Overview
-The **main entry point** is **src/server.js**, which initializes and configures
+The **main entry point** is [**src/server.js**](src/server.js), which initializes and configures
 this microservice and listens for incoming connections. The **configuration** 
-engine is provided by **src/konf.js** and follows the convention that dynamic 
+engine is provided by [**src/configuration.js**](src/configuration.js) and follows the convention that dynamic 
 configurations (e.g. command line parameters and environment variables) are 
 prefered over static configurations (e.g. configuration files). 
 
@@ -31,19 +31,23 @@ prefered over static configurations (e.g. configuration files).
 This microservice uses a layered configuration based on both command line 
 arguments and configuration files in the config directory. The configuration 
 files are processed so that the last (and most specific) configuration is the 
-winner. In example, **default.json** provides a generic template configuration, 
-but **development.json** can override properties from the other or it can 
+winner. In example, [**default.json**](config/default.json) provides a generic template configuration, 
+but [**development.json**](config/development.json) can override properties from the other or it can 
 define new properties. The [README.md](config/README.md) in that directory 
 has more information about the order in which the configuration files are 
 processed. 
 
+### Logging
+This microservie allso 
+
 ### Developing at the NodeJS Layer 
 For simplicity and consistency, the package scripts use pm2 to start and stop the microservice.  
   1. Start and stop the server through the package  
-   **npm run start** - uses the development dependency version of PM2 to start the microservice  
-   **npm run nuke** - stops the microservice, flushes the logs, and deletes the server process  
+         **npm run start** - uses the development dependency version of PM2 to start the microservice  
+         **npm run nuke** - stops the microservice, flushes the logs, and deletes the server process
+         
 
-  2. Add and remove modules and packages to the microservice  
+  2. Add and remove modules and packages from the microservice  
    **npm --save-dev install _package_**  
    **npm --save install _package_**  
    **npm install _package_**  
@@ -57,22 +61,22 @@ locally (for development) and add the dependency bin directory to $PATH.
 Here are some useful commands for administering pm2 processes:
 
   1. Start the microservice  
-      **pm2 start src/server.js**
+         **pm2 start src/server.js**
     
   2. Show the status of a process or omit the process-id to show the status of all processes  
-      **pm2 status _process-id_**
+         **pm2 status _process-id_**
      
   3. Tail the log for a process or omit the process-id to tail the combined log for all processes  
-      **pm2 log _process-id_**  
+         **pm2 log _process-id_**  
 
   4. Stop a process  
-      **pm2 stop _process-id_**
+         **pm2 stop _process-id_**
       
   5. Flush the logs  
-      **pm2 flush**     
+         **pm2 flush**     
       
   6. Delete a process  
-      **pm2 delete _process-id_**
+         **pm2 delete _process-id_**
 
     
 ## Deployment
@@ -80,11 +84,11 @@ Here are some useful commands for administering pm2 processes:
   1. Utilize the configuration layer by providing command line arguments 
   to override those settings. 
 
-    a. Passing command line arguments through PM2:
-        pm2 start src/server.js -x -- --loglevel=debug --num=2 --str=Hello
+      a. Passing command line arguments through PM2:  
+      **pm2 start src/server.js -x -- --loglevel=debug --num=2 --str=Hello**
 
-    b. Passing command line arguments through Node:
-        node -- --loglevel=debug
+      b. Passing command line arguments through Node:  
+      **node -- --loglevel=debug**
 
 ### Docker Image Layer 
 
