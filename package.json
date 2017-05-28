@@ -6,8 +6,9 @@
   "scripts": {
     "start": "pm2 start src/server.js",
     "stop" : "pm2 stop 0",
-    "restart" : "pm2 restart 0",
-    "nuke": "pm2 stop 0; pm2 flush; pm2 delete 0; rm -rf node_modules; rm -rf logs/*",
+    "delete" : "npm run stop; pm2 flush; pm2 delete 0",
+    "nuke": "npm run delete; rm -rf node_modules; rm -rf logs/*",
+    "restart" : "npm run delete; npm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
