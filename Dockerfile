@@ -7,6 +7,7 @@ RUN npm install pm2 -g
 RUN npm install
 ADD . /microservice
 
+ENV NODE_ENV production
 EXPOSE 80
 
 # -- start the microservice
