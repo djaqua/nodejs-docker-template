@@ -5,10 +5,10 @@
   "main": "src/server.js",
   "scripts": {
     "start": "pm2 start src/server.js",
-    "stop" : "pm2 stop 0",
-    "delete" : "npm run stop; pm2 flush; pm2 delete 0",
+    "stop": "pm2 stop 0",
+    "delete": "npm run stop; pm2 flush; pm2 delete 0",
     "nuke": "npm run delete; rm -rf node_modules; rm -rf logs/*",
-    "restart" : "npm run delete; npm run start",
+    "restart": "npm run delete; npm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +24,7 @@
   "dependencies": {
     "config": "^1.26.1",
     "dateformat": "^2.0.0",
+    "express": "^4.15.3",
     "lodash": "^4.17.4",
     "uuid": "^3.0.1",
     "winston": "^2.3.1",

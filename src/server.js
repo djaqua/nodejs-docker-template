@@ -4,35 +4,24 @@
  *   Responsible for configuring and initializing the server.  
  */
 
-var conf = require("./configuration");
-
-// TODO: make sure logging picks up the changes from configuration
-var logger = require("./logging").getLogger();
-
+const express = require('express');
+const conf = require("./configuration");
+const logger = require("./logging").getLogger();
 logger.notice("Using top level configuration file '" + conf('filename') + "'");
 
-//console.log( "conf('logging.winston.level'): ", conf('logging.winston.level') );
-//console.log( "conf('logging.winston.level', 'ting'): ", conf('logging.winston.level', 'bar') );
+const app = express();
+const port = conf('service.port');
 
-//console.log( "conf('numProperty'): ", conf('numProperty'));
-//console.log( "conf('numProperty', 27): ", conf('numProperty', 27));
+app.get('/', (req, res) => {
+    logger.debug('GET / requested');
+    res.send("Hello, world!");
+});
 
-
-//console.log( "conf('strProperty'): ", conf('strProperty'));
-//console.log( "conf('strProperty', 'bye bye'): ", conf('strProperty', 'bye bye'));
-
-
-//console.log( "conf('nullProperty'): ", conf('nullProperty'));
-//console.log( "conf('nullProperty', 'good times'): ", conf('nullProperty', 'good times'));
-
-//console.log( "conf('naProperty'): ", conf('naProperty'));
-//console.log( "conf('naProperty', 'good times'): ", conf('naProperty', 'good times'));
-
-
-
-
-
-setInterval(function() {
-    logger.debug("heartbeat (debug)");
-}, 10000);
+app.listen(port, (err) => {
+    if (err) {
+        logger.error("Something went wrong: ", err);
+        return;
+    }
+    logger.notice("Server is listening on ", port);
+});
 

@@ -1,6 +1,10 @@
 {
     "filename": "development.json",
-    
+
+    "service": {
+        "port": 8080
+    }, 
+
     "logging": {
     
         "winston": {
@@ -10,7 +14,6 @@
             "filenames": {
                 "useDatedFilenames": false,
                 "dateFormatStr": "yyyymmdd"
-
             },
 
             "transports": {
@@ -26,7 +29,6 @@
                     }
                 }
             }
-
         }
    	}
 }

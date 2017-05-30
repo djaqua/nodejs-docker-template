@@ -1,6 +1,10 @@
 {
     "filename": "production.json",
-    
+   
+    "service" : {
+        "port" : 80
+    },
+
     "logging": {
     
         "winston": {

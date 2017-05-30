@@ -100,6 +100,8 @@ Here are some useful commands for administering pm2 processes:
     
   3. Run the mocroservice docker image  
     **docker run _image-id_**  
+    **docker run -dt -p 8080:80 _image-id_** 
+    **sudo docker run -dt -p 80:80 _image-id_**
 
   4. Remove an image  
     **docker rmi _image-id_**  
@@ -119,5 +121,5 @@ Here are some useful commands for administering pm2 processes:
     **docker stop _container-id_**  
     **docker start _container-id_**  
 
-
+  5. R
 
