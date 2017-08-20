@@ -2,10 +2,10 @@ version: '3'
 services:
 
   template_microservice:
-    build: .
-    image: "template_microservice"
+    build: './template_microservice'
+    image: 'template_microservice'
     ports:
       - 8000:80
     volumes:
-      - ./logs:/template_microservice/logs
+      - ./logs:/template_microservice_workdir/logs
 
