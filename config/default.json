@@ -1,6 +1,17 @@
 {
     "filename": "default.json",
-    
+   
+    "persistance" : {
+        "mongo": {
+            "hostname": "example.net",
+            "username": "changeme",
+            "password": "changeme",
+            "dbname": "changeme",
+            "port": 27017,
+            "authdb": "admin"
+        }
+    },
+
     "logging": {
     
         "winston": {

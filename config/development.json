@@ -4,6 +4,18 @@
     "service": {
         "port": 8080
     }, 
+ 
+    "persistance" : {
+        "mongo": {
+            "hostname": "localhost",
+            "username": "changeme",
+            "password": "changeme",
+            "dbname": "changeme",
+            "port": 27017,
+            "authdb": "admin"
+        }
+    },
+
 
     "logging": {
     
