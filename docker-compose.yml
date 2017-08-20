@@ -2,7 +2,7 @@ version: '3'
 services:
 
   template_microservice:
-    build: './template_microservice'
+    build: '.'
     image: 'template_microservice'
     ports:
       - 8000:80

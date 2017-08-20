@@ -1,9 +1,15 @@
 #!/bin/bash
 
-PROJECT_HOME="$( cd "$( dirname $0 )" && pwd )"
-NODEJS_BIN="${PROJECT_HOME}/node_modules/.bin"
+SOURCEME_HOME="$( cd "$( dirname $0 )" && pwd )"
+NODEJS_BIN="${SOURCEME_HOME}/node_modules/.bin"
 
 nvm install  # installs the correct version of NodeJS to run this microservice
 npm install  # installs the dependencies for this microservice
 
+test -d logs || mkdir logs
+
+
 export PATH="${PATH}:${NODEJS_BIN}"
+
+
+
