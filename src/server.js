@@ -8,6 +8,7 @@ const express = require('express');
 const conf = require("./configuration");
 const logger = require("./logging").getLogger();
 logger.notice("Using top level configuration file '" + conf('filename') + "'");
+const persistence = require("./persistence");
 
 const app = express();
 const port = conf('service.port');
