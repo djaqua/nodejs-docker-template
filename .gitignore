@@ -1,6 +1,8 @@
 # Pseudodisposable logfiles
 config/ada*.json
 config/local*.json
+data
+
 
 # Logs
 logs
