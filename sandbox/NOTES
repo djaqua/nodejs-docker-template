@@ -1,0 +1,6 @@
+docker run -d --name some-mongo -p 27017:27017 sneaky
+docker run -it --rm --link some-mongo:mongo mongo mongo -u mongo -p yvy4y9YUtfg0C0Ea --authenticationDatabase admin some-mongo/some-db
+
+docker run --detach --name dev-mongo --publish 27017:27017 -e MONGODB_USERNAME=janie -e MONGODB_PASSWORD=alphabeta -e MONGODB_DBNAME=template_microservice sneaky 
+docker run -it --rm --link dev-mongo:mongo mongo mongo -u janie -p alphabeta --authenticationMechanism SCRAM-SHA-1 dev-mongo/template_microservice
+

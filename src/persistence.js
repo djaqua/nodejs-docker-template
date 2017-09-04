@@ -5,7 +5,8 @@ const logger = require('./logging').getLogger();
 
 var mongo = conf('persistance.mongo');
 
-mongoose.connect('mongodb://' + mongo.hostname + ':' + mongo.port + '/' + mongo.dbname + '?authSource=' + mongo.authdb, {
+mongoose.connect('mongodb://' + mongo.hostname + ':' + mongo.port + '/' + mongo.dbname, {
+//mongoose.connect('mongodb://' + mongo.hostname + ':' + mongo.port + '/' + mongo.dbname + '?authSource=' + mongo.authdb + '&authMechanism=SCRAM-SHA-1', {
     user: mongo.username,
     pass: mongo.password
 });
