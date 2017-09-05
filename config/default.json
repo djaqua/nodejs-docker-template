@@ -1,12 +1,16 @@
 {
     "filename": "default.json",
-   
+  
+    "service" : {
+        "port":8080
+    },
+
     "persistance" : {
         "mongo": {
             "hostname": "example.net",
             "username": "changeme",
             "password": "changeme",
-            "dbname": "changeme",
+            "dbname": "template_microservice",
             "port": 27017,
             "authdb": "admin"
         }
@@ -16,7 +20,7 @@
     
         "winston": {
             
-            "level": "info",
+            "level": "debug",
             "useColors": true,
 
             "levels": {
@@ -44,7 +48,7 @@
             "filenames": {			
                 "logsDir": "logs",
                 "defaultFilename": "general",
-                "useDatedFilenames": true,	
+                "useDatedFilenames": false,	
                 "dateFormatStr": "yyyymmdd_hhMMss",
                 "fileExtension": "log"
             },

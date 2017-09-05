@@ -8,10 +8,12 @@ WORKDIR /template_microservice_workdir
 COPY package.json /template_microservice_workdir
 RUN npm install pm2 --global
 RUN npm install
-COPY . /template_microservice_workdir
+RUN mkdir logs; \
+    mkdir data
 
-#ENV NODE_ENV production
 EXPOSE 80
+
+COPY . /template_microservice_workdir
 
 # -- start the microservice
 CMD ["pm2-docker", "src/server.js"]

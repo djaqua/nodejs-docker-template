@@ -1,0 +1,12 @@
+{
+    "filename": "testing.json",
+ 
+    "persistance" : {
+        "mongo": {
+            "hostname": "dev-mongo",
+            "username": "janie",
+            "password": "BylmOlirt5owEew#"
+        }
+    }
+}
+

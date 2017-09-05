@@ -1,48 +1,15 @@
 {
     "filename": "development.json",
 
-    "service": {
-        "port": 8080
-    }, 
- 
     "persistance" : {
         "mongo": {
-            "hostname": "dev-mongo",
+            "hostname": "localhost",
             "username": "janie",
-            "password": "alphabeta",
+            "password": "BylmOlirt5owEew#",
             "dbname": "template_microservice",
             "port": 27017,
-            "authdb": "admin",
-            "notes": "TODO: set the username and password dynamically, through the configuration module, so that the knock-down database doesn't have to be reconfigured here every time during development"
+            "authdb": "admin"
         }
-    },
-
-
-    "logging": {
-    
-        "winston": {
-            
-            "level": "debug",
-            "useColors": true,
-            "filenames": {
-                "useDatedFilenames": false,
-                "dateFormatStr": "yyyymmdd"
-            },
-
-            "transports": {
-                "file": {
-                    "general" : {
-                        "level" : "debug"
-                    }
-                },
-                "console": {
-                    "general" : {
-                        "level" : "debug",
-                        "timestamp": true
-                    }
-                }
-            }
-        }
-   	}
+    }
 }
 
