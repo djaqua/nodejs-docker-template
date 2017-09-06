@@ -42,7 +42,7 @@
                 "warning": 	 "yellow",
                 "notice": 	 "blue",
                 "info": 	 "white",
-                "debug": 	 "white"
+                "debug": 	 "blue"
             },
 
             "filenames": {			

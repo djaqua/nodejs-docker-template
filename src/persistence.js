@@ -3,70 +3,67 @@ const conf = require('./configuration');
 const logger = require('./logging').getLogger();
 
 
-var mongo = conf('persistance.mongo');
+var dbconf = conf('persistance.mongo');
 
-mongoose.connect('mongodb://' + mongo.hostname + ':' + mongo.port + '/' + mongo.dbname, {
-//mongoose.connect('mongodb://' + mongo.hostname + ':' + mongo.port + '/' + mongo.dbname + '?authSource=' + mongo.authdb + '&authMechanism=SCRAM-SHA-1', {
-    user: mongo.username,
-    pass: mongo.password
+mongoose.connect('mongodb://' + dbconf.hostname + ':' + dbconf.port + '/' + dbconf.dbname, {
+    useMongoClient: true,
+    user: dbconf.username,
+    pass: dbconf.password
 });
 
 logger.debug("mongoose.connection.readyState=" + mongoose.connection.readyState);
 
-/*
-module.Todo = mongoose.model('Todo', {
-    text: String
+var Todo = mongoose.model('Todo', {
+    text: String,
+    completed: Date,
+    created: { type: Date, default: Date.now },
 });
 
 
-module.exports = function(app) {
-
-    // TODO design a better api than this
-    
-    app.get('/api/todos', (req, res) => {
-        Todo.find( (err, todos) => {
+/* The 'C' in CRUD */
+module.exports = {
+    addTodo: function(todoText) {
+        var todo = new Todo({text: todoText});
+        todo.save(function(err, obj) {
             if (err) {
-                logging.error(err);
-                return res.send(err);
+                logger.error("dammit: " + err);
             }
-            res.json(todos);
+            logger.debug("good: " + obj);
         });
-    });
+        return todo;
+    },
 
-    app.post('/api/todos', (req, res) => {
-        Todo.create({
-            text: req.body.text,
-            done: false
-        }, (err, todo) => {
+    /* The 'R' in CRUD */
+    getAllTodos: function() {
+        return Todo.find(function(err, docs) {
             if (err) {
-                return res.send(err);
+                logger.debug("dammit, foiled again! " + err);
             }
-            Todo.find((err, todos) = {
-                if (err) {
-                    return res.send(err);
-                }
-                res.json(todos);
-            });
         });
-        
-    });
+    },
 
-    app.delete('/api/todos/:todo_id', (req, res) => {
-        Todo.remove({
-            _id: req.params.todo_id
-        }, (err, todo) => {
-            if (err) {
-                logging.error(err);
-                return res.send(err);
+    /* The 'U' in CRUD */
+    completeTodo: function(todoId) {
+        var retVal = null;
+        Todo.update(todoId, {completed: new Date()}, function(err, todoModel) {
+            if (err) {        
+                logger.error("dammit: " + err);
             }
-            Todo.find((err, todos) => {
-                if (err) {
-                    logging.error(err);
-                    return res.send(err);
-                }
-                res.json(todos);
-            });
+            retVal = todoModel;
+          
         });
-    });
-};
-*/
+        return retVal;
+    },
+
+    /* The 'D' in CRUD */
+    removeTodo: function(todoId) {
+        Todo.delete({
+            _id:todoId
+        }, function(err, todoModel) {
+            if (err) {
+                logger.error("dammit: " + err);
+            };
+            retVal = todoModel;
+        });
+    }
+}
