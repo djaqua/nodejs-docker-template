@@ -26,9 +26,8 @@ module.exports = {
         var todo = new Todo({text: todoText});
         todo.save(function(err, obj) {
             if (err) {
-                logger.error("dammit: " + err);
+                logger.error(err);
             }
-            logger.debug("good: " + obj);
         });
         return todo;
     },
@@ -37,17 +36,20 @@ module.exports = {
     getAllTodos: function() {
         return Todo.find(function(err, docs) {
             if (err) {
-                logger.debug("dammit, foiled again! " + err);
+                logger.error(err);
             }
         });
     },
 
+    // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //                   M ake S ure T his Works
+    //                   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     /* The 'U' in CRUD */
     completeTodo: function(todoId) {
         var retVal = null;
         Todo.update(todoId, {completed: new Date()}, function(err, todoModel) {
             if (err) {        
-                logger.error("dammit: " + err);
+                logger.error(err);
             }
             retVal = todoModel;
           
@@ -57,11 +59,11 @@ module.exports = {
 
     /* The 'D' in CRUD */
     removeTodo: function(todoId) {
-        Todo.delete({
+        Todo.deleteOne({
             _id:todoId
         }, function(err, todoModel) {
             if (err) {
-                logger.error("dammit: " + err);
+                logger.error(err);
             };
             retVal = todoModel;
         });

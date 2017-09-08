@@ -13,37 +13,62 @@ const persistence = require("./persistence");
 const app = express();
 const port = conf('service.port');
 
-var foo = persistence.addTodo("Keep on keep'n on");
-if (foo) {
-    logger.debug("woot!");
-    logger.debug("foo._id: " + foo._id);
-}
-else {
-    logger.debug("dammit!! foo: '" + foo + "'");
-}
+app.get('/delete-them-all', (req, res) => {
+    logger.debug('GET /delete-them-all requested');
 
-var allTodos = persistence.getAllTodos();
-logger.debug("All todos: " + allTodos);
-allTodos.exec(function(err, docs) {
-    for (i = 0; i < docs.length; i++) {
-        logger.info(docs[i].text);
-                
-    }
+    var allTodos = persistence.getAllTodos();
+    logger.debug("All todos: " + allTodos);
+    allTodos.exec(function(err, docs) {
+        if (err) {
+            logger.error(err);
+        }
+        for (i = 0; i < docs.length; i++) {
+            persistence.removeTodo(docs[i]._id);
+        }
+    });
+
+    res.send("Visit read-them-all to reprint the list or create a new one at create-one");
+});
+
+app.get('/read-them-all', (req, res) => {
+    logger.debug('GET /read-them-all requested');
+
+    var allTodos = persistence.getAllTodos();
+    logger.debug("All todos: " + allTodos);
+    allTodos.exec(function(err, docs) {
+        if (err) {
+            logger.error(err);
+        }
+        for (i = 0; i < docs.length; i++) {
+            logger.info(docs[i].text);
+        }
+    });
+
+    res.send("Add another one at create-one or remove them all at delete-them-all");
 });
 
 
-app.get('/', (req, res) => {
+
+app.get('/create-one', (req, res) => {
     var foo = persistence.addTodo("Keep on keep'n on");
     logger.debug('GET / requested');
     if (foo) {
-        logger.debug("woot!");
-        logger.debug("foo._id: " + foo._id);
+        logger.debug("created Todo item with id: " + foo._id);
     }
     else {
-        logger.debug("dammit!! foo: '" + foo + "'");
+        logger.error(err);
     }
+    res.send("One created!");
+});
+
+
+
+
+app.get('/', (req, res) => {
+    logger.debug('GET / requested');
     res.send("Hello, world!");
 });
+
 
 app.listen(port, (err) => {
     if (err) {
