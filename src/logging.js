@@ -3,27 +3,27 @@ var _ = require('lodash');
 var dateFormat = require('dateformat');
 var uuid = require('uuid');
 
-var conf = require('./configuration');
+var config = require('config');
 
-if (conf('logging.winston.useColors')) {
+if (config.get('logging.winston.useColors')) {
     winston.addColors(true);
 }
 
 var createConsoleTransport = function() {
     return new (winston.transports.Console)({
         name: uuid.v4(),
-        colorize: conf('logging.winston.useColors')
+        colorize: config.get('logging.winston.useColors')
     });
 };
 
 var getFileTransports = function() {
-    return _.map( _.values(conf('logging.winston.transports.file')), function(template) {
+    return _.map( _.values(config.get('logging.winston.transports.file')), function(template) {
         return createFileTransport( template );
     } );
 };
 
 var createFileTransport = function(template) {
-    var logfile = template.filename ? template.filename : conf('logging.winston.filenames.defaultFilename');
+    var logfile = template.filename ? template.filename : config.get('logging.winston.filenames.defaultFilename');
     return new (winston.transports.File)({
         name: uuid.v4(),
         level: template.level,
@@ -36,8 +36,8 @@ var createFileTransport = function(template) {
 
 var cache = {
     /*
-     * Encapsulates the current conf.red state of the logger. This cache is 
-     * intended to save repetitive calls to commonly used objects and 
+     * Encapsulates the current conf.red state of the logger. This cache is
+     * intended to save repetitive calls to commonly used objects and
      * functions. There's probably a better way to keep this stuff "disposable"
      * and out of the anonymous exports, but this works for now.
      */
@@ -50,7 +50,7 @@ var getFilenameWithPath = function(name) {
 var getLogsDir = function() {
     if (!cache.logsDir) {
         // by contract, conf won't cache default values
-        cache.logsDir = conf('logging.winston.filenames.logsDir', '.') + "/";     
+        cache.logsDir = config.get('logging.winston.filenames.logsDir', '.') + "/";
     }
     return cache.logsDir;
 }
@@ -58,13 +58,13 @@ var getLogsDir = function() {
 var getFilename = function(logfile) {
 
 	if (!cache.logFilenameBuilder) {
-		
-        var logfileExtension = conf('logging.winston.filenames.fileExtension', 
+
+        var logfileExtension = config.get('logging.winston.filenames.fileExtension',
                                     'out');
-			
-		if (conf('logging.winston.filenames.useDatedFilenames')) {
+
+		if (config.get('logging.winston.filenames.useDatedFilenames')) {
 			cache.logFilenameBuilder = function(logfile) {
-				logfile += "-" + dateFormat(new Date(), conf('logging.winston.filenames.dateFormatStr')); 
+				logfile += "-" + dateFormat(new Date(), config.get('logging.winston.filenames.dateFormatStr'));
 				logfile += "." + logfileExtension;
 				return logfile;
 			};
@@ -72,18 +72,18 @@ var getFilename = function(logfile) {
 		else {
 			cache.logFilenameBuilder = function(logfile) {
 				return logfile + "." + logfileExtension;
-			};	
+			};
 		}
 	}
-	return cache.logFilenameBuilder(logfile);	
+	return cache.logFilenameBuilder(logfile);
 };
 
 var createNewLogger = function() {
-    // it is NOT the business of this factory method to cache instances 
-    // returned.   
+    // it is NOT the business of this factory method to cache instances
+    // returned.
     return new (winston.Logger)({
-        level: conf('logging.winston.level'),
-        levels: conf('logging.winston.levels'),
+        level: config.get('logging.winston.level'),
+        levels: config.get('logging.winston.levels'),
         transports: _.flattenDeep([getFileTransports(), createConsoleTransport()])
     });
 };

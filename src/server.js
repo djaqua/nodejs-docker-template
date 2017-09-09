@@ -1,37 +1,39 @@
 /*
  * Author: anjaqua@gmail.com
- * Desription: 
- *   Responsible for configuring and initializing the server.  
+ * Desription:
+ *   Responsible for config.getiguring and initializing the server.
  */
+const config = require("config");
+const logger = require("./logging").getLogger();
+const persistence = require("./persistence");
 
+const _ = require("lodash");
 const express = require('express');
 const path = require('path');
 
-const conf = require("./configuration");
-const logger = require("./logging").getLogger();
-logger.notice("Using top level configuration file '" + conf('filename') + "'");
-const persistence = require("./persistence");
 
 const app = express();
-const port = conf('service.port');
+const port = config.get('service.port');
 const theMenu = "[<a href=\"/create-one\">create one</a>]" +
                 "[<a href=\"/read-them-all\">read them all</a>]" +
                 "[<a href=\"/delete-them-all\">delete them all</a>]";
+
+logger.notice("Using top level config.getiguration file '" + config.get('filename') + "'");
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.get('/delete-them-all', (req, res) => {
     logger.debug('GET /delete-them-all requested');
 
-    var allTodos = persistence.getAllTodos();
+    let allTodos = persistence.getAllTodos();
     logger.debug("All todos: " + allTodos);
-    allTodos.exec(function(err, docs) {
+    allTodos.exec((err, docs) => {
         if (err) {
             logger.error(err);
         }
-        for (i = 0; i < docs.length; i++) {
-            persistence.removeTodo(docs[i]._id);
-        }
+        _.forEach( docs, (doc) => {
+            persistence.removeTodo(doc._id);
+        });
     });
 
     res.send(theMenu);
@@ -40,15 +42,15 @@ app.get('/delete-them-all', (req, res) => {
 app.get('/read-them-all', (req, res) => {
     logger.debug('GET /read-them-all requested');
 
-    var allTodos = persistence.getAllTodos();
+    let allTodos = persistence.getAllTodos();
     logger.debug("All todos: " + allTodos);
-    allTodos.exec(function(err, docs) {
+    allTodos.exec((err, docs) => {
         if (err) {
             logger.error(err);
         }
-        for (i = 0; i < docs.length; i++) {
-            logger.info(docs[i].text);
-        }
+        _.forEach( docs, (doc) => {
+            logger.info(doc.text);
+        });
     });
 
     res.send(theMenu);
@@ -57,7 +59,7 @@ app.get('/read-them-all', (req, res) => {
 
 
 app.get('/create-one', (req, res) => {
-    var foo = persistence.addTodo("Keep on keep'n on");
+    let foo = persistence.addTodo("Keep on keep'n on");
     logger.debug('GET /create-one requested');
     if (foo) {
         logger.debug("created Todo item with id: " + foo._id);
@@ -70,7 +72,7 @@ app.get('/create-one', (req, res) => {
 
 
 app.get('/complete-one', (req, res) => {
-    var foo = persistence.addTodo("Keep on keep'n on");
+    let foo = persistence.addTodo("Keep on keep'n on");
     logger.debug('GET /complete-one requested');
     if (foo) {
         logger.debug("created Todo item with id: " + foo._id);
@@ -89,4 +91,3 @@ app.listen(port, (err) => {
     }
     logger.notice("Server is listening on ", port);
 });
-

@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const conf = require('./configuration');
+const config = require('config');
 const logger = require('./logging').getLogger();
 
 
-var dbconf = conf('persistance.mongo');
+var dbconf = config.get('persistance.mongo');
 
 mongoose.connect('mongodb://' + dbconf.hostname + ':' + dbconf.port + '/' + dbconf.dbname, {
     useMongoClient: true,
@@ -21,7 +21,7 @@ var Todo = mongoose.model('Todo', {
 
 
 module.exports = {
-    
+
     /* The 'C' in CRUD */
     addTodo: function(todoText) {
         var todo = new Todo({text: todoText});
@@ -49,11 +49,11 @@ module.exports = {
     completeTodo: function(todoId) {
         var retVal = null;
         Todo.update(todoId, {completed: new Date()}, function(err, todoModel) {
-            if (err) {        
+            if (err) {
                 logger.error(err);
             }
             retVal = todoModel;
-          
+
         });
         return retVal;
     },
