@@ -5,6 +5,8 @@
  */
 
 const express = require('express');
+const path = require('path');
+
 const conf = require("./configuration");
 const logger = require("./logging").getLogger();
 logger.notice("Using top level configuration file '" + conf('filename') + "'");
@@ -12,6 +14,11 @@ const persistence = require("./persistence");
 
 const app = express();
 const port = conf('service.port');
+const theMenu = "[<a href=\"/create-one\">create one</a>]" +
+                "[<a href=\"/read-them-all\">read them all</a>]" +
+                "[<a href=\"/delete-them-all\">delete them all</a>]";
+
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.get('/delete-them-all', (req, res) => {
     logger.debug('GET /delete-them-all requested');
@@ -27,7 +34,7 @@ app.get('/delete-them-all', (req, res) => {
         }
     });
 
-    res.send("Visit read-them-all to reprint the list or create a new one at create-one");
+    res.send(theMenu);
 });
 
 app.get('/read-them-all', (req, res) => {
@@ -44,29 +51,34 @@ app.get('/read-them-all', (req, res) => {
         }
     });
 
-    res.send("Add another one at create-one or remove them all at delete-them-all");
+    res.send(theMenu);
 });
 
 
 
 app.get('/create-one', (req, res) => {
     var foo = persistence.addTodo("Keep on keep'n on");
-    logger.debug('GET / requested');
+    logger.debug('GET /create-one requested');
     if (foo) {
         logger.debug("created Todo item with id: " + foo._id);
     }
     else {
         logger.error(err);
     }
-    res.send("One created!");
+    res.send(theMenu);
 });
 
 
-
-
-app.get('/', (req, res) => {
-    logger.debug('GET / requested');
-    res.send("Hello, world!");
+app.get('/complete-one', (req, res) => {
+    var foo = persistence.addTodo("Keep on keep'n on");
+    logger.debug('GET /complete-one requested');
+    if (foo) {
+        logger.debug("created Todo item with id: " + foo._id);
+    }
+    else {
+        logger.error(err);
+    }
+    res.send(theMenu);
 });
 
 

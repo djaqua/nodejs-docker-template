@@ -20,8 +20,9 @@ var Todo = mongoose.model('Todo', {
 });
 
 
-/* The 'C' in CRUD */
 module.exports = {
+    
+    /* The 'C' in CRUD */
     addTodo: function(todoText) {
         var todo = new Todo({text: todoText});
         todo.save(function(err, obj) {
