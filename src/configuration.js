@@ -43,13 +43,13 @@ var getPrioritizedValue = function(cfgKey) {
   //
   // Process the keys to get their corresponding alter-keys
   //
-  if ("logging.winston.level" === cfgKey) {
-    argKey = "loglevel";
-    envKey = "TEMPLATE_MICROSERVICE_LOG_LEVEL";
+  if ('logging.winston.level' === cfgKey) {
+    argKey = 'loglevel';
+    envKey = 'TEMPLATE_MICROSERVICE_LOG_LEVEL';
   }
-  else if ("logging.winston.filenames.logsDir" === cfgKey) {
-    argKey = "logdir";
-    envKey = "TEMPLATE_MICROSERVICE_LOG_DIR"
+  else if ('logging.winston.filenames.logsDir' === cfgKey) {
+    argKey = 'logdir';
+    envKey = 'TEMPLATE_MICROSERVICE_LOG_DIR'
   }
 
   //

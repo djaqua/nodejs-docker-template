@@ -11,7 +11,7 @@ mongoose.connect('mongodb://' + dbconf.hostname + ':' + dbconf.port + '/' + dbco
   pass: dbconf.password
 });
 
-logger.debug("mongoose.connection.readyState=" + mongoose.connection.readyState);
+logger.debug('mongoose.connection.readyState=' + mongoose.connection.readyState);
 
 const Todo = mongoose.model('Todo', {
   text: String,

@@ -81,7 +81,7 @@ var getFilenameWithPath = function(name) {
 var getLogsDir = function() {
   if (!cache.logsDir) {
     // by contract, conf won't cache default values
-    cache.logsDir = conf('logging.winston.filenames.logsDir') + "/";
+    cache.logsDir = conf('logging.winston.filenames.logsDir') + '/';
   }
   return cache.logsDir;
 }
@@ -89,8 +89,8 @@ var getLogsDir = function() {
 /**
  * var getFilename - description
  *
- * @param  {string} logfile the meaningful name for the file ("general",
- * "errors", etc)
+ * @param  {string} logfile the meaningful name for the file ('general',
+ * 'errors', etc)
  * @return {string}         the fully formatted filename
  */
 var getFilename = function(logfile) {
@@ -101,14 +101,14 @@ var getFilename = function(logfile) {
 
 		if (conf('logging.winston.filenames.useDatedFilenames')) {
 			cache.logFilenameBuilder = function(logfile) {
-				logfile += "-" + dateFormat(new Date(), conf('logging.winston.filenames.dateFormatStr'));
-				logfile += "." + logfileExtension;
+				logfile += '-' + dateFormat(new Date(), conf('logging.winston.filenames.dateFormatStr'));
+				logfile += '.' + logfileExtension;
 				return logfile;
 			};
 		}
 		else {
 			cache.logFilenameBuilder = function(logfile) {
-				return logfile + "." + logfileExtension;
+				return logfile + '.' + logfileExtension;
 			};
 		}
 	}
