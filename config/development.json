@@ -1,35 +1,15 @@
 {
     "filename": "development.json",
 
-    "service": {
-        "port": 8080
-    }, 
-
-    "logging": {
-    
-        "winston": {
-            
-            "level": "debug",
-            "useColors": true,
-            "filenames": {
-                "useDatedFilenames": false,
-                "dateFormatStr": "yyyymmdd"
-            },
-
-            "transports": {
-                "file": {
-                    "general" : {
-                        "level" : "debug"
-                    }
-                },
-                "console": {
-                    "general" : {
-                        "level" : "debug",
-                        "timestamp": true
-                    }
-                }
-            }
+    "persistance" : {
+        "mongo": {
+            "hostname": "localhost",
+            "username": "janie",
+            "password": "BylmOlirt5owEew#",
+            "dbname": "template_microservice",
+            "port": 27017,
+            "authdb": "admin"
         }
-   	}
+    }
 }
 

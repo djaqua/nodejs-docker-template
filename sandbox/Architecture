@@ -1,0 +1,8 @@
+
+# Main modules
+ * Logging (logging.js) - provides an interface for logging system events
+ * Configuration (configuration.js) - provides an interface for runtime configuration 
+ * Persistance (persistence.js) - provides an interface for accessing a database
+ * Metrics - provides an interface for querying microservice metrics
+ * Health Reporting - provides an interface for querying microservice health
+ * API - provides the REST API functionality for the microservice

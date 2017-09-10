@@ -2,10 +2,36 @@ version: '3'
 services:
 
   template_microservice:
+    
+    
+    #  
     build: '.'
     image: 'template_microservice'
+    container_name: 'microservice-template'
+
+    links:
+      - dev-mongo
     ports:
-      - 8000:80
+      - 8080:80
     volumes:
       - ./logs:/template_microservice_workdir/logs
+    environment:
+      - NODE_ENV=testing
 
+  
+  dev-mongo:
+    image: frodenas/mongodb:latest 
+    container_name: "dev-mongo"
+    ports: 
+      - 27017:27017
+    volumes:
+      - ./data:/data
+      - ./logs:/logs
+    environment:
+      - MONGO_DATA_DIR=/data
+      - MONGO_LOG_DIR=/logs   
+
+      # frodenas/mongodb specific environment variables
+      - MONGODB_USERNAME=janie
+      - MONGODB_PASSWORD=BylmOlirt5owEew#
+      - MONGODB_DBNAME=template_microservice
