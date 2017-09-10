@@ -1,18 +1,15 @@
 version: '3'
 services:
 
-  template_microservice:
+  template-microservice:
     
-    
-    #  
-    build: '.'
-    image: 'template_microservice'
-    container_name: 'microservice-template'
-
+    build: .
+    image: 'template-microservice'
+    container_name: 'template-microservice-container'
     links:
       - dev-mongo
     ports:
-      - 8080:80
+      - 8080:8080
     volumes:
       - ./logs:/template_microservice_workdir/logs
     environment:
@@ -25,8 +22,8 @@ services:
     ports: 
       - 27017:27017
     volumes:
-      - ./data:/data
       - ./logs:/logs
+
     environment:
       - MONGO_DATA_DIR=/data
       - MONGO_LOG_DIR=/logs   
