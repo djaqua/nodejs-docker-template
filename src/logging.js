@@ -11,8 +11,9 @@ const uuid = require('uuid');
 
 
 
+
 if (conf('logging.winston.useColors')) {
-  winston.addColors(true);
+  winston.addColors(conf('logging.winston.colors'));
 }
 
 const cache = {

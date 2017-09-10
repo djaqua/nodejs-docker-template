@@ -1,98 +1,97 @@
 {
-    "filename": "default.json",
-  
-    "service" : {
-        "port":8080
-    },
+  "filename": "default.json",
 
-    "persistance" : {
-        "mongo": {
-            "hostname": "example.net",
-            "username": "changeme",
-            "password": "changeme",
-            "dbname": "template_microservice",
-            "port": 27017,
-            "authdb": "admin"
+  "service" : {
+    "port":8080
+  },
+
+  "persistance" : {
+    "mongo": {
+      "hostname": "example.net",
+      "username": "changeme",
+      "password": "changeme",
+      "dbname": "template_microservice",
+      "port": 27017,
+      "authdb": "admin"
+    }
+  },
+
+  "logging": {
+
+    "winston": {
+
+      "level": "info",
+      "useColors": true,
+
+      "levels": {
+        "emergency": 0,
+        "alert": 	 1,
+        "critical":  2,
+        "error": 	 3,
+        "warning": 	 4,
+        "notice": 	 5,
+        "info": 	 6,
+        "debug": 	 7
+      },
+
+      "colors": {
+        "emergency": "red",
+        "alert": 	 "red",
+        "critical":	 "red",
+        "error": 	 "red",
+        "warning": 	 "yellow",
+        "notice": 	 "blue",
+        "info": 	 "white",
+        "debug": 	 "blue"
+      },
+
+      "filenames": {
+        "logsDir": "logs",
+        "defaultFilename": "general",
+        "useDatedFilenames": false,
+        "dateFormatStr": "yyyymmdd_hhMMss",
+        "fileExtension": "log"
+      },
+
+
+      "transports" : {
+        "file": {
+          "general": {
+            "level": "info",
+            "label": true,
+            "filename": "general",
+            "showLevel": true,
+            "timestamp": true,
+            "silent": false
+          },
+          "problems": {
+            "level": "warning",
+            "label": true,
+            "filename": "problems",
+            "showLevel": true,
+            "timestamp": true,
+            "silent": false
+          }
+        },
+        "console": {
+          "general": {
+            "level": "info",
+            "silent": false,
+            "colorize": false,
+            "timestamp": false,
+            "showLevel": true
+          }
+        },
+        "http": {
+          "general": {
+            "host": "localhost",
+            "port": 80,
+            "path": "/path/to/endpoint",
+            "auth": null,
+            "ssl": false
+          }
         }
-    },
-
-    "logging": {
-    
-        "winston": {
-            
-            "level": "debug",
-            "useColors": true,
-
-            "levels": {
-                "emergency": 0,
-                "alert": 	 1,
-                "critical":  2,
-                "error": 	 3,
-                "warning": 	 4,
-                "notice": 	 5,
-                "info": 	 6,
-                "debug": 	 7
-            },
-  
-            "colors": {
-                "emergency": "red",
-                "alert": 	 "red",
-                "critical":	 "red",
-                "error": 	 "red",
-                "warning": 	 "yellow",
-                "notice": 	 "blue",
-                "info": 	 "white",
-                "debug": 	 "blue"
-            },
-
-            "filenames": {			
-                "logsDir": "logs",
-                "defaultFilename": "general",
-                "useDatedFilenames": false,	
-                "dateFormatStr": "yyyymmdd_hhMMss",
-                "fileExtension": "log"
-            },
-
-
-            "transports" : {
-                "file": {
-                    "general": {
-                        "level": "info",
-                        "label": true,
-                        "filename": "general",
-                        "showLevel": true,
-                        "timestamp": true,
-                        "silent": false
-                    },
-                    "problems": {
-                        "level": "warning",
-                        "label": true,
-                        "filename": "problems",
-                        "showLevel": true,
-                        "timestamp": true,
-                        "silent": false
-                    }
-                },
-                "console": {
-                    "general": {
-                        "level": "info",
-                        "silent": false,
-                        "colorize": false,
-                        "timestamp": false,
-                        "showLevel": true
-                    }
-                },
-                "http": {
-                    "general": {
-                        "host": "localhost",
-                        "port": 80,
-                        "path": "/path/to/endpoint",
-                        "auth": null,
-                        "ssl": false
-                    }
-                }
-            }
-        }
-   	}
+      }
+    }
+ 	}
 }
-

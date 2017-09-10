@@ -26,7 +26,6 @@ app.get('/delete-them-all', (req, res) => {
   logger.debug('GET /delete-them-all requested');
 
   let allTodos = persistence.getAllTodos();
-  logger.debug('All todos: ' + allTodos);
   allTodos.exec((err, docs) => {
     if (err) {
       logger.error(err);
@@ -43,13 +42,12 @@ app.get('/read-them-all', (req, res) => {
   logger.debug('GET /read-them-all requested');
 
   let allTodos = persistence.getAllTodos();
-  logger.debug('All todos: ' + allTodos);
   allTodos.exec((err, docs) => {
     if (err) {
       logger.error(err);
     }
     _.forEach( docs, (doc) => {
-      logger.info(doc.text);
+      logger.debug(doc.text);
     });
   });
 
@@ -59,8 +57,9 @@ app.get('/read-them-all', (req, res) => {
 
 
 app.get('/create-one', (req, res) => {
-  let foo = persistence.addTodo('Keep on keep\'n on');
   logger.debug('GET /create-one requested');
+
+  let foo = persistence.addTodo('Keep on keep\'n on');
   if (foo) {
     logger.debug('created Todo item with id: ' + foo._id);
   }
@@ -72,8 +71,9 @@ app.get('/create-one', (req, res) => {
 
 
 app.get('/complete-one', (req, res) => {
-  let foo = persistence.addTodo('Keep on keep\'n on');
   logger.debug('GET /complete-one requested');
+
+  let foo = persistence.addTodo('Keep on keep\'n on');
   if (foo) {
     logger.debug('created Todo item with id: ' + foo._id);
   }
