@@ -3,18 +3,18 @@
  * Desription:
  *   Responsible for config.getiguring and initializing the server.
  */
-const conf = require('./configuration');
-const logger = require('./logging');
-const persistence = require('./persistence');
+var conf = require('./configuration');
+var logger = require('./logging');
+var persistence = require('./persistence');
 
-const _ = require('lodash');
-const express = require('express');
-const path = require('path');
+var _ = require('lodash');
+var express = require('express');
+var path = require('path');
 
 
-const app = express();
-const port = conf('service.port');
-const theMenu = '[<a href=\'/create-one\'>create one</a>]' +
+var app = express();
+var port = conf('service.port');
+var theMenu = '[<a href=\'/create-one\'>create one</a>]' +
                 '[<a href=\'/read-them-all\'>read them all</a>]' +
                 '[<a href=\'/delete-them-all\'>delete them all</a>]';
 
@@ -25,7 +25,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 app.get('/delete-them-all', (req, res) => {
   logger.debug('GET /delete-them-all requested');
 
-  let allTodos = persistence.getAllTodos();
+  var allTodos = persistence.getAllTodos();
   allTodos.exec((err, docs) => {
     if (err) {
       logger.error(err);
@@ -41,7 +41,7 @@ app.get('/delete-them-all', (req, res) => {
 app.get('/read-them-all', (req, res) => {
   logger.debug('GET /read-them-all requested');
 
-  let allTodos = persistence.getAllTodos();
+  var allTodos = persistence.getAllTodos();
   allTodos.exec((err, docs) => {
     if (err) {
       logger.error(err);
@@ -59,7 +59,7 @@ app.get('/read-them-all', (req, res) => {
 app.get('/create-one', (req, res) => {
   logger.debug('GET /create-one requested');
 
-  let foo = persistence.addTodo('Keep on keep\'n on');
+  var foo = persistence.addTodo('Keep on keep\'n on');
   if (foo) {
     logger.debug('created Todo item with id: ' + foo._id);
   }
@@ -73,9 +73,9 @@ app.get('/create-one', (req, res) => {
 app.get('/complete-one', (req, res) => {
   logger.debug('GET /complete-one requested');
 
-  let foo = persistence.addTodo('Keep on keep\'n on');
+  var foo = persistence.addTodo('Keep on keep\'n on');
   if (foo) {
-    logger.debug('created Todo item with id: ' + foo._id);
+    logger.debug('completed Todo item with id: ' + foo._id);
   }
   else {
     logger.error(err);
