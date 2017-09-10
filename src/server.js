@@ -3,8 +3,8 @@
  * Desription:
  *   Responsible for config.getiguring and initializing the server.
  */
-const config = require("config");
-const logger = require("./logging").getLogger();
+const conf = require("./configuration");
+const logger = require("./logging");
 const persistence = require("./persistence");
 
 const _ = require("lodash");
@@ -13,12 +13,12 @@ const path = require('path');
 
 
 const app = express();
-const port = config.get('service.port');
+const port = conf('service.port');
 const theMenu = "[<a href=\"/create-one\">create one</a>]" +
                 "[<a href=\"/read-them-all\">read them all</a>]" +
                 "[<a href=\"/delete-them-all\">delete them all</a>]";
 
-logger.notice("Using top level config.getiguration file '" + config.get('filename') + "'");
+logger.notice("Using top level config.getiguration file '" + conf('filename') + "'");
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 
