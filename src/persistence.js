@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const conf = require('./configuration');
-const logger = require('./logging');
+var mongoose = require('mongoose');
+var conf = require('./configuration');
+var logger = require('./logging');
 
 
-const dbconf = conf('persistance.mongo');
+var dbconf = conf('persistance.mongo');
 
 mongoose.connect('mongodb://' + dbconf.hostname + ':' + dbconf.port + '/' + dbconf.dbname, {
   useMongoClient: true,
@@ -13,7 +13,7 @@ mongoose.connect('mongodb://' + dbconf.hostname + ':' + dbconf.port + '/' + dbco
 
 logger.debug('mongoose.connection.readyState=' + mongoose.connection.readyState);
 
-const Todo = mongoose.model('Todo', {
+var Todo = mongoose.model('Todo', {
   text: String,
   completed: Date,
   created: { type: Date, default: Date.now },

@@ -1,15 +1,19 @@
 {
-    "filename": "development.json",
+  "filename": "development.json",
 
-    "persistance" : {
-        "mongo": {
-            "hostname": "localhost",
-            "username": "janie",
-            "password": "BylmOlirt5owEew#",
-            "dbname": "template_microservice",
-            "port": 27017,
-            "authdb": "admin"
-        }
+  "persistance" : {
+    "mongo": {
+      "hostname": "localhost",
+      "username": "janie",
+      "password": "BylmOlirt5owEew#",
+      "dbname": "template_microservice",
+      "port": 27017,
+      "authdb": "admin"
     }
+  },
+  "logging"  : {
+    "winston" : {
+      "level" : "debug"
+    }
+  }
 }
-

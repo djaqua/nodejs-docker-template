@@ -1,50 +1,20 @@
 {
-    "filename": "production.json",
-   
-    "service" : {
-        "port" : 80
-    },
- 
-    "persistance" : {
-        "mongo": {
-            "hostname": "prod-mongo"
-        }
-    },
+  "filename": "production.json",
 
-    "logging": {
-    
-        "winston": {
-            
-            "level": "info",
-            "useColors": false,
+  "service" : {
+    "port" : 80
+  },
 
-            "transports" : {
+  "persistance" : {
+    "mongo": {
+      "hostname": "prod-mongo"
+    }
+  },
 
-                "file": {
-
-                    "general": {
-                        "level": "info"
-                    },
-                    "problems": {
-                        "level": "warning"
-                    }
-                },
-                "console": {
-
-                    "general": {
-                        "silent": true,
-                        "colorize": false
-                    }
-                },
-                "http": {
-
-                    "general": {
-                        "port": 443,
-                        "ssl": true
-                    }
-                }
-            }
-        }
-   	}
+  "logging": {
+    "winston": {
+      "level": "info",
+      "useColors": false,
+    }
+ 	}
 }
-

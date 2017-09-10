@@ -36,9 +36,9 @@ var yargs = require('yargs')
  */
 var getPrioritizedValue = function(cfgKey) {
 
-  let argKey = null;
-  let envKey = null;
-  let value = null;
+  var argKey = null;
+  var envKey = null;
+  var value = null;
 
   //
   // Process the keys to get their corresponding alter-keys
