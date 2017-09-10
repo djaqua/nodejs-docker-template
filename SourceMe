@@ -8,10 +8,78 @@ nvm install  # installs the correct version of NodeJS to run this microservice
 npm install  # installs the dependencies for this microservice
 
 test -d logs || mkdir logs
-test -d data || mkdir data
+#test -d data || mkdir data
+
+PATHBAK=$PATH;
+PATH="${PROJECT_BIN}:${NODEJS_BIN}:${PATH}"
+
+#
+# --- PM2 Utilities -----------------------------------------------------------
+#
+function pcycle {
+    procId=${1:-0}
+    pm2 stop $procId
+    if [[ $? -eq 0 ]]; then
+        pm2 flush --silent
+        pm2 start $procId
+        if [[ ! -z "$2" ]]; then
+            pm2 logs $procId --lines $2
+        else
+            pm2 logs $procId
+        fi
+    fi
+}
+
+function pkill {
+    procId=${1:-0}
+    pm2 stop --silent $procId && pm2 delete --silent $procId
+}
+
+function pnuke {
+    pkill all
+}
+
+#
+# --- Docker Utilities --------------------------------------------------------
+#
+
+alias dps='docker ps'
+alias dls='docker images'
+alias drmi='docker rmi'
+alias dnuke='docker system prune -a'
+
+alias dcup='docker-compose up -d'
+alias dcdown='docker-compose down'
+alias dcnuke='docker-compose down --rmi all --remove-orphans'
+
+function dkill {
+    docker stop $0 && docker rm $0
+}
 
 
-export PATH="${PROJECT_BIN}:${NODEJS_BIN}:${PATH}"
+#
+# --- Overall process management functions ------------------------------------
+#
+function devnuke {
+    # stop the PM2 processes that depend on dev-mongo and then kill dev-mongo
+    pnuke
+    echo "Stopped: `docker stop template-microservice-container`"
+    echo "Removed: `docker rm template-microservice-container`"
+    echo "Stopped: `docker stop dev-mongo`"
+    echo "Removed: `docker rm dev-mongo`"
 
+    # remove the directories that were created by SourceMe
+    rm -rf node_modules && rm -rf logs && rm -rf data
+
+    # restore sanity to environment variables
+    if [[ ! -z $PATHBAK ]]; then 
+        PATH=$PATHBAK && unset PATHBAK
+    fi
+}
+
+#
+# Exit Messages
+#
+echo "Remember to start the dev-mongo container with 'dcup dev-mongo'    :)"
 
 
