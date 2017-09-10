@@ -2,7 +2,7 @@
 config/ada*.json
 config/local*.json
 data
-
+sandbox
 
 # Logs
 logs
