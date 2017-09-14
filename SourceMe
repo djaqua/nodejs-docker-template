@@ -10,8 +10,8 @@ npm install  # installs the dependencies for this microservice
 test -d logs || mkdir logs
 #test -d data || mkdir data
 
-PATHBAK=$PATH;
-PATH="${PROJECT_BIN}:${NODEJS_BIN}:${PATH}"
+export PATHBAK=$PATH;
+export PATH="${PROJECT_BIN}:${NODEJS_BIN}:${PATH}"
 
 #
 # --- PM2 Utilities -----------------------------------------------------------
