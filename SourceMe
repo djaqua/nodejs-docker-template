@@ -53,7 +53,7 @@ alias dcdown='docker-compose down'
 alias dcnuke='docker-compose down --rmi all --remove-orphans'
 
 function dkill {
-    docker stop $0 && docker rm $0
+    docker stop $1 && docker rm $1
 }
 
 
