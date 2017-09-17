@@ -17,7 +17,9 @@ services:
 
   
   dev-mongo:
-    image: frodenas/mongodb:latest 
+    build: ./sandbox/docker-mongodb
+    image: djaqua/mongodb:latest 
+    # used to use frodenas/mongodb:latest 
     container_name: "dev-mongo"
     ports: 
       - 27017:27017
@@ -32,3 +34,4 @@ services:
       - MONGODB_USERNAME=janie
       - MONGODB_PASSWORD=BylmOlirt5owEew#
       - MONGODB_DBNAME=template_microservice
+

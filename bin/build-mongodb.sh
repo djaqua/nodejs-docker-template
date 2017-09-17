@@ -9,6 +9,7 @@ if [[ ! -d "$DOCKER_MONGODB_HOME" ]]; then
     init-mongodb.sh
 fi
 
-docker build -t frodenas/mongodb $DOCKER_MONGODB_HOME
+#docker build -t frodenas/mongodb $DOCKER_MONGODB_HOME
+docker build -t djaqua/mongodb $DOCKER_MONGODB_HOME
 
 
