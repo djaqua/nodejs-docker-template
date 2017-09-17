@@ -1,18 +1,17 @@
-"use strict"
-const config = require('config');
-const _ = require('lodash');
+var config = require('config');
+var _ = require('lodash');
 
 
 /**
- * let cache - the cache for the configuration system.
+ * var cache - the cache for the configuration system.
  */
-const cache = {
+var cache = {
 };
 
 /**
  * The values of the command line arguments.
  */
-const yargs = require('yargs')
+var yargs = require('yargs')
   .string('loglevel')
   .describe('loglevel', 'Set the level for the logging system')
   .choices('loglevel', _.keys(config.get('logging.winston.levels')))
@@ -23,23 +22,23 @@ const yargs = require('yargs')
 
 
 /**
- * let get - a function that returns the prioritized value that corresponds
+ * var get - a function that returns the prioritized value that corresponds
  * to the specified configuration key. The key is assumed to be a dot dilimited
  * key suitable for node-config. The prioritized values are determines by the
  * following rules:
  *
- *   a. command line parameters are preferred over environment letiables
- *   b. environment letiables are preferred over configuration file parameters
+ *   a. command line parameters are preferred over environment variables
+ *   b. environment variables are preferred over configuration file parameters
  *   c. configuration file parameters are prefered over hard-coded/ values
  *
- * @param  {string} cfgKey a key for which to get an environment letiable
- * @return {string}        the value of the environment letiable
+ * @param  {string} cfgKey a key for which to get an environment variable
+ * @return {string}        the value of the environment variable
  */
-const getPrioritizedValue = function(cfgKey) {
+var getPrioritizedValue = function(cfgKey) {
 
-  let argKey = null;
-  let envKey = null;
-  let value = null;
+  var argKey = null;
+  var envKey = null;
+  var value = null;
 
   //
   // Process the keys to get their corresponding alter-keys

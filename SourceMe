@@ -77,6 +77,10 @@ function devnuke {
     fi
 }
 
+
+alias dmongo='docker run -it --rm --network nodejsdockertemplate_default --link dev-mongo:mongo mongo mongo dev-mongo/template_microservice -u janie -p'
+
+
 #
 # Exit Messages
 #

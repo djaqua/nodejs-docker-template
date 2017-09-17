@@ -1,17 +1,16 @@
-"strict mode"
-const mongoose = require('mongoose');
-const conf = require('./configuration');
-const logger = require('./logging');
+var mongoose = require('mongoose');
+var conf = require('./configuration');
+var logger = require('./logging');
 
 
-const dbconf = conf('persistance.mongo');
+var dbconf = conf('persistance.mongo');
 
 Promise = require('bluebird');
 
 mongoose.Promise = Promise;
 logger.debug('set to bluebird')
 
-const mongoUri = dbconf.hostname;
+var mongoUri = dbconf.hostname;
 
 mongoose.connect('mongodb://' + dbconf.hostname + ':' + dbconf.port + '/' + dbconf.dbname, {
   useMongoClient: true,
@@ -28,9 +27,9 @@ mongoose.connect('mongodb://' + dbconf.hostname + ':' + dbconf.port + '/' + dbco
 
 logger.debug('mongoose.connection.readyState=' + mongoose.connection.readyState);
 
-const Todo = mongoose.model('Todo', {
+var Todo = mongoose.model('Todo', {
   text: String,
-  completed: Date,
+  compvared: Date,
   created: { type: Date, default: Date.now }
 });
 
@@ -38,7 +37,7 @@ module.exports = {
 
   /* The 'C' in CRUD */
   addTodo: function(todoText) {
-    let todo = new Todo({text: todoText});
+    var todo = new Todo({text: todoText});
     todo.save(function(err, obj) {
       if (err) {
         logger.error(err);
@@ -57,9 +56,9 @@ module.exports = {
   },
 
   /* The 'U' in CRUD */
-  completeTodo: function(todoId) {
-    let retVal = null;
-    Todo.update(todoId, {completed: new Date()}, (err, todoModel) => {
+  compvareTodo: function(todoId) {
+    var retVal = null;
+    Todo.update(todoId, {compvared: new Date()}, (err, todoModel) => {
       if (err) {
         logger.error(err);
       }
@@ -70,7 +69,7 @@ module.exports = {
 
   /* The 'D' in CRUD */
   removeTodo: function(todoId) {
-    Todo.deleteOne({
+    Todo.devareOne({
       _id:todoId
     }, function(err, todoModel) {
       if (err) {
