@@ -99,18 +99,15 @@ const getFilename = function(logfile) {
 
 	if (!cache.logFilenameBuilder) {
 
-    let logfileExtension = conf('logging.winston.filenames.fileExtension');
-
 		if (conf('logging.winston.filenames.useDatedFilenames')) {
 			cache.logFilenameBuilder = function(logfile) {
 				logfile += '-' + dateFormat(new Date(), conf('logging.winston.filenames.dateFormatStr'));
-				logfile += '.' + logfileExtension;
 				return logfile;
 			};
 		}
 		else {
 			cache.logFilenameBuilder = function(logfile) {
-				return logfile + '.' + logfileExtension;
+				return logfile;
 			};
 		}
 	}
