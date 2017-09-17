@@ -19,7 +19,7 @@ const theMenu = '[<a href=\'/create-one\'>create one</a>]' +
                 '[<a href=\'/read-them-all\'>read them all</a>]' +
                 '[<a href=\'/delete-them-all\'>delete them all</a>]';
 
-logger.notice('Using top level config.getiguration file ' + conf('filename'));
+logger.notice('Using top level configuration file ' + conf('filename'));
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 

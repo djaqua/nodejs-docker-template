@@ -47,10 +47,9 @@
 
       "filenames": {
         "logsDir": "logs",
-        "defaultFilename": "general",
+        "defaultFilename": "template-microservice.log",
         "useDatedFilenames": false,
-        "dateFormatStr": "yyyymmdd_hhMMss",
-        "fileExtension": "log"
+        "dateFormatStr": "yyyymmdd_hhMMss"
       },
 
 
@@ -59,7 +58,9 @@
           "general": {
             "level": "info",
             "label": true,
-            "filename": "general",
+
+            "filename": "template-microservice.log",
+            
             "showLevel": true,
             "timestamp": true,
             "silent": false
@@ -67,7 +68,7 @@
           "problems": {
             "level": "warning",
             "label": true,
-            "filename": "problems",
+            "filename": "template-microservice.err.log",
             "showLevel": true,
             "timestamp": true,
             "silent": false

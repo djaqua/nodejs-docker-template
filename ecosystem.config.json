@@ -1,0 +1,21 @@
+{
+  "apps" : [{
+    "name"      : "template-microservice",
+    "script"    : "./src/server.js",
+    "node_args" : "",
+    "env"       : {
+      "COMMON_VARIABLE": true
+    },
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "env_development" : {
+      "NODE_ENV": "development"
+    },
+    "env_testing" : {
+      "NODE_ENV": "testing"
+    },
+    "out_file"  : "logs/pm2-template-microservice.log",
+    "combine_logs"  : true
+  }]
+}

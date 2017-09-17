@@ -14,7 +14,7 @@
   "logging": {
     "winston": {
       "level": "info",
-      "useColors": false,
+      "useColors": false
     }
  	}
 }

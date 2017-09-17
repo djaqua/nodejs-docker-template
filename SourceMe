@@ -32,7 +32,7 @@ function pcycle {
 
 function pkill {
     procId=${1:-0}
-    pm2 stop --silent $procId && pm2 delete --silent $procId
+    pm2 stop --silent $procId && pm2 flush && pm2 delete --silent $procId
 }
 
 function pnuke {
