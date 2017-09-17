@@ -1,5 +1,4 @@
-"use strict"
-
+"strict mode"
 const mongoose = require('mongoose');
 const conf = require('./configuration');
 const logger = require('./logging');
@@ -7,10 +6,24 @@ const logger = require('./logging');
 
 const dbconf = conf('persistance.mongo');
 
+Promise = require('bluebird');
+
+mongoose.Promise = Promise;
+logger.debug('set to bluebird')
+
+const mongoUri = dbconf.hostname;
+
 mongoose.connect('mongodb://' + dbconf.hostname + ':' + dbconf.port + '/' + dbconf.dbname, {
   useMongoClient: true,
   user: dbconf.username,
   pass: dbconf.password
+})
+.then(() => {
+  logger.info("Successfully established a connection to mongo");
+})
+.catch(err => {
+  logger.error("There was an error connecting to mongo: " + err);
+  process.exit(1);
 });
 
 logger.debug('mongoose.connection.readyState=' + mongoose.connection.readyState);
@@ -18,7 +31,7 @@ logger.debug('mongoose.connection.readyState=' + mongoose.connection.readyState)
 const Todo = mongoose.model('Todo', {
   text: String,
   completed: Date,
-  created: { type: Date, default: Date.now },
+  created: { type: Date, default: Date.now }
 });
 
 module.exports = {
