@@ -14,9 +14,9 @@ RUN mkdir logs; \
 EXPOSE 80
 
 # -- only copy the actual microservice stuff, not the project overhead
-COPY ./ecosystem.config.json /template_microservice_workdir/ecosystem.config.json
+COPY ./pm2.config.json /template_microservice_workdir/pm2.config.json
 COPY ./config /template_microservice_workdir/config
 COPY ./src /template_microservice_workdir/src
 
 # -- start the microservice
-CMD ["pm2-docker", "ecosystem.config.json"]
+CMD ["pm2-docker", "pm2.config.json"]

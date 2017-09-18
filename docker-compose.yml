@@ -2,7 +2,7 @@ version: '2'
 services:
 
   template-microservice:
-    
+
     build: .
     image: 'template-microservice'
     container_name: 'template-microservice-container'
@@ -15,23 +15,21 @@ services:
     environment:
       - NODE_ENV=testing
 
-  
   dev-mongo:
     build: ./sandbox/docker-mongodb
-    image: djaqua/mongodb:latest 
-    # used to use frodenas/mongodb:latest 
+    image: djaqua/mongodb:latest
+    # used to use frodenas/mongodb:latest
     container_name: "dev-mongo"
-    ports: 
+    ports:
       - 27017:27017
     volumes:
       - ./logs:/logs
 
     environment:
       - MONGO_DATA_DIR=/data
-      - MONGO_LOG_DIR=/logs   
+      - MONGO_LOG_DIR=/logs
 
-      # frodenas/mongodb specific environment variables
+      # djaqua/mongodb specific environment variables
       - MONGODB_USERNAME=janie
       - MONGODB_PASSWORD=BylmOlirt5owEew#
       - MONGODB_DBNAME=template_microservice
-

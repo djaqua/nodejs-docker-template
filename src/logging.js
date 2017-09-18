@@ -1,7 +1,3 @@
-/**
- *
- */
-
 var conf = require('./configuration');
 
 var winston = require('winston');
