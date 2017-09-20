@@ -1,6 +1,8 @@
 {
   "filename": "development.json",
-
+  "service": {
+    "port": 8080
+  },
   "persistance" : {
     "mongo": {
       "hostname": "localhost",

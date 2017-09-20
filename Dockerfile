@@ -11,6 +11,8 @@ RUN npm install --production
 RUN mkdir logs; \
     mkdir data
 
+# This is the default port for the microservice, which both testing
+# and production inherit.
 EXPOSE 80
 
 # -- only copy the actual microservice stuff, not the project overhead

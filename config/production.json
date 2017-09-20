@@ -1,10 +1,6 @@
 {
   "filename": "production.json",
 
-  "service" : {
-    "port" : 80
-  },
-
   "persistance" : {
     "mongo": {
       "hostname": "prod-mongo"

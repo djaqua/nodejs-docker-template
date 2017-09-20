@@ -30,6 +30,15 @@ function pcycle {
     fi
 }
 
+function plogs {
+  procId=${1:-0}
+  if [[ ! -z "$2" ]]; then
+    pm2 logs $procId --lines $2
+  else
+    pm2 logs $procId
+  fi
+}
+
 function pkill {
     procId=${1:-0}
     pm2 stop --silent $procId && pm2 flush && pm2 delete --silent $procId
@@ -44,6 +53,7 @@ function pnuke {
 #
 
 alias dps='docker ps'
+alias dlog='docker logs'
 alias dls='docker images'
 alias drmi='docker rmi'
 alias dnuke='docker system prune -a'
@@ -63,27 +73,31 @@ function dkill {
 function devnuke {
     # stop the PM2 processes that depend on dev-mongo and then kill dev-mongo
     pnuke
-    echo "Stopped: `docker stop template-microservice-container`"
-    echo "Removed: `docker rm template-microservice-container`"
-    echo "Stopped: `docker stop dev-mongo`"
-    echo "Removed: `docker rm dev-mongo`"
 
     # remove the directories that were created by SourceMe
     rm -rf node_modules && rm -rf logs && rm -rf data
 
     # restore sanity to environment variables
-    if [[ ! -z $PATHBAK ]]; then 
+    if [[ ! -z $PATHBAK ]]; then
         PATH=$PATHBAK && unset PATHBAK
     fi
 }
 
-
+# using this network name is a real hack! gross!!!
 alias dmongo='docker run -it --rm --network nodejsdockertemplate_default --link dev-mongo:mongo mongo mongo dev-mongo/template_microservice -u janie -p'
 
 
 #
 # Exit Messages
 #
-echo "Remember to start the dev-mongo container with 'dcup dev-mongo'    :)"
-
-
+cyan=`tput setaf 6`
+blue=`tput setaf 4`
+standout=`tput smso`
+nostandout=`tput rmso`
+bold=`tput bold`
+echo "${cyan}#"
+echo "# ${standout}REMEMBER${nostandout} to create the dev-mongo image (with ${blue}./bin/init-mongodb.sh${cyan}), and then "
+echo "#          start the container if necessary, with '${blue}dcup dev-mongo${cyan}' ${bold}    :)"
+tput sgr0
+echo "${cyan}#"
+tput sgr0

@@ -2,7 +2,7 @@
   "filename": "default.json",
 
   "service" : {
-    "port":8080
+    "port":80
   },
 
   "persistance" : {
@@ -60,7 +60,7 @@
             "label": true,
 
             "filename": "template-microservice.log",
-            
+
             "showLevel": true,
             "timestamp": true,
             "silent": false

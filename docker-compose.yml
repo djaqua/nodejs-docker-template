@@ -9,7 +9,8 @@ services:
     links:
       - dev-mongo
     ports:
-      - 8080:8080
+      # Open 8080 on the host, use port 80 on the container
+      - 8080:80
     volumes:
       - ./logs:/template_microservice_workdir/logs
     environment:
@@ -18,7 +19,7 @@ services:
   dev-mongo:
     build: ./sandbox/docker-mongodb
     image: djaqua/mongodb:latest
-    # used to use frodenas/mongodb:latest
+    # based on frodenas/mongodb:latest
     container_name: "dev-mongo"
     ports:
       - 27017:27017
@@ -30,6 +31,8 @@ services:
       - MONGO_LOG_DIR=/logs
 
       # djaqua/mongodb specific environment variables
+      # if these change, the configuration files in ./config/
+      # will also need to be updated.
       - MONGODB_USERNAME=janie
       - MONGODB_PASSWORD=BylmOlirt5owEew#
       - MONGODB_DBNAME=template_microservice
