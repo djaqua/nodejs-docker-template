@@ -4,27 +4,37 @@ services:
   template-microservice:
 
     build: .
+    
     image: 'template-microservice'
+    
     container_name: 'template-microservice-container'
+    
     links:
       - dev-mongo
+    
     ports:
       # Open 8080 on the host, use port 80 on the container
       - 8080:80
+    
     volumes:
       - ./logs:/template_microservice_workdir/logs
+    
     environment:
       - NODE_ENV=testing
 
   dev-mongo:
+
     build: ./sandbox/docker-mongodb
+    
     image: djaqua/mongodb:latest
-    # based on frodenas/mongodb:latest
+    
     container_name: "dev-mongo"
+    
     ports:
       - 27017:27017
     volumes:
       - ./logs:/logs
+      #- ./data:/data       
 
     environment:
       - MONGO_DATA_DIR=/data

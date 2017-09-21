@@ -1,31 +1,12 @@
 # nodejs-docker-template
 Template repo for a Dockerizable NodeJS microservice
 
-
-## Getting Started
-Starting in the root directory of this repository 
-(e.g. ~/projects/nodejs-docker-template), run the following commands:
-    
-Make life easy by sourcing the SourceMe file:
-  1. **source SourceMe**  
-     - obtain useful aliases and environment variables for this template  
-     - run a bunch of boilerplate operations  
-
-Or do it manually because pain is what makes us human:  
-  1. **nvm install** - installs the correct version of NodeJS  
-  2. **npm install** - installs the microservice dependencies  
-
-
-## Developing the Microservice
-
-### Architectural Overview
+## Architectural Overview
 The **main entry point** is [**src/server.js**](src/server.js), which initializes and configures
 this microservice and listens for incoming connections. The **configuration** 
 engine is provided by [**src/configuration.js**](src/configuration.js) and follows the convention that dynamic 
 configurations (e.g. command line parameters and environment variables) are 
 prefered over static configurations (e.g. configuration files). 
-
-
 
 ### Configuration
 This microservice uses a layered configuration based on both command line 
@@ -37,89 +18,142 @@ define new properties. The [README.md](config/README.md) in that directory
 has more information about the order in which the configuration files are 
 processed. 
 
-### Logging
-This microservie allso 
 
-### Developing at the NodeJS Layer 
-For simplicity and consistency, the package scripts use pm2 to start and stop the microservice.  
-  1. Start and stop the server through the package  
-         **npm run start** - uses the development dependency version of PM2 to start the microservice  
-         **npm run nuke** - stops the microservice, flushes the logs, and deletes the server process
-         
+## Developing the Microservice
+This microservice template is designed with developers in mind. The project is
+laid out to make the _Development_ and _Integration Testing_ process as 
+painless as possible. 
 
-  2. Add and remove modules and packages from the microservice  
-   **npm --save-dev install _package_**  
-   **npm --save install _package_**  
-   **npm install _package_**  
-   **npm -g install _cli-package_**  
+ * **SourceMe** - Non-destructively creates directories, sets environment 
+  variables, initializes the project, and provides several intuitive utilities.
 
-### PM2 Layer
+ * **./config/** - Provides runtime configurations for the microservice. Out of
+  the box, this template includes configurations for both _Development_ 
+  (development.json) and _Testing_ (testing.json).
+ 
+ * **./src** - Location of the microservice source code, both public 
+  and private.
+
+ * **package.json** - Contains the metadata for this Node-based microservice as
+  well as a list of module dependencies.
+ 
+ * **pm2.config.json** - Provides a PM2 runtime configuration that supports,
+  with consistency, the Development process as well as the Testing process.
+ 
+ * **docker-compose.yml** - Embodies the integration test plan; specifies a
+  production-like relationship between the components of the "bigger picture"
+  with the added benefit of playing an active role during _Development_.
+
+ * **Dockerfile** - Builds a production-ready Docker image for the 
+  microservice. **TREAD LIGHTLY** and consider changes with respect to the 
+  runtime configurations specified in _./config/_, _pm2.config.json_,
+  and _docker-compose.yml_.
+
+### Getting Started
+
+Starting in the root directory of this repository 
+(e.g. ~/projects/nodejs-docker-template), run the following commands:
+    
+Choose the blue pill; use the *SourceMe* file to make life easy:
+
+ 1. Initialize the project and and get a bunch of aliases and utilities:
+  **source SourceMe** 
+
+Or choose the red pill; do it manually because pain is what makes us human:  
+
+ 1. Use the Node Version Manager to ensure the correct version of node is installed:
+   **nvm install**     
+ 
+ 2. Install the microservice development dependencies:
+   **npm install**     
+
+ 3. Add the PM2 binaries to your *$PATH* variable:
+   **export PATH="./node_modules/.bin:$PATH"**
+
+ 3. Create a directory to contain the microservice logfiles:
+   **mkdir logs**    
+ 
+ 4. Create a directory to sandbox deployment dependencies
+   **mkdir sandbox** 
+ 
+ 5. Clone my okay fork of a MongoDB image 
+   **git clone git@github.com:djaqua/docker-mongodb ./sandbox/docker-mongodb**
+ 
+ 
+### Development 
+  
+
 You don't need to install PM2 globally (sudo npm -g install pm2) if you 
 took the easy route and sourced the SourceMe file. That will install PM2 
 locally (for development) and add the dependency bin directory to $PATH.
 
-Here are some useful commands for administering pm2 processes:
 
-  1. Start the microservice  
-         **pm2 start src/server.js**
+Here is the general workflow for the _Development_ stage of the microservice:
+
+ 1. Start the microservice  
+  **npm run start**
+  or
+  **pm2 start pm2.config.json**
     
-  2. Show the status of a process or omit the process-id to show the status of all processes  
-         **pm2 status _process-id_**
+ 2. Show the status of a process or omit the process-id to show the status of all processes  
+  **pm2 status _process-id_**
+  or if you chose the blue pill,
+  **pps _process-id_** 
      
-  3. Tail the log for a process or omit the process-id to tail the combined log for all processes  
-         **pm2 log _process-id_**  
+ 3. Tail the log for a process or omit the process-id to tail the combined log for all processes  
+  **pm2 logs _process-id_**  
+  or if you chose the blue pill,
+  **plogs _process-id_**  
 
-  4. Stop a process  
-         **pm2 stop _process-id_**
-      
-  5. Flush the logs  
-         **pm2 flush**     
-      
-  6. Delete a process  
-         **pm2 delete _process-id_**
+ 4. Stop the microservice, flush the logs, then restart the microservice:
+  **pm2 stop _process-id_ ; pm2 flush ; pm2 start _process-id_**     
+  or if you chose the blue pill, you get step 3 for free :)
+  **pcycle _process-id_**
 
+ 5. Kill all the pm2 processes:
+  **pm2 delete all**
+   Or if you chose the blue pill,
+  **pnuke**
     
-## Deployment
+### Integration Testing
+Follow these steps if you have modified *./config*, *./src*, *./package.json*, 
+or *./pm2.config.json* and need to test your changes in a production-like
+environment
+ 
+ 1. Ensure that the development ecosystem is up and running:
 
-  1. Utilize the configuration layer by providing command line arguments 
-  to override those settings. 
-
-      a. Passing command line arguments through PM2:  
-      **pm2 start src/server.js -x -- --loglevel=debug --num=2 --str=Hello**
-
-      b. Passing command line arguments through Node:  
-      **node -- --loglevel=debug**
-
-### Docker Image Layer 
-
-  1. Build the microservice docker image  
-    **docker build -t _microservice-name_ .**  
-    
-  2. List available images  
-    **docker images**  
-    
-  3. Run the mocroservice docker image  
-    **docker run _image-id_**  
-    **docker run -dt -p 8080:80 _image-id_** 
-    **sudo docker run -dt -p 80:80 _image-id_**
-
-  4. Remove an image  
-    **docker rmi _image-id_**  
-
-
-### Docker Container Layer
-  1. List the running containers  
-    **docker ps**  
+  **dcup dev-mongo**
      
-  2. List all the containers  
-    **docker ps -a**  
-    
-  3. Observe the microservice logs  
-    **docker logs _container-id_**  
-    
-  4. Start and stop the microservice  
-    **docker stop _container-id_**  
-    **docker start _container-id_**  
+ 2. Build and run the microservice docker image. 
+  
+  docker stop template-microservice-container-name
+  docker rm template-microservice-container-name
+  docker rmi template-microservice-image-tag
+  docker build -t template-microservice-image-tag .
+  docker create --link dev-mongo:mongo \
+   --port 8080:8080 \
+   --env NODE_ENV=testing \
+   --name template_microservice_name \
+   template-microservice-image-tag
+  docker run template-microservice-name
+   
+   Or, if you used *SourceMe*, just run 
 
-  5. R
+ **dcycle --image _template-microservice-image-tag_**    
+     
+ 3. Nuke **all** the containers and images. If you used *SourceMe*, run the
+   following command:
 
+ **pnuke**
+
+   But, if you chose the red pill, run the following commands:
+
+   a. For each running container (**dps** or **docker ps**), run the following 
+     commands:
+   
+   **docker stop *_template-microservice-container-tag**
+   
+   b. Once all the containers have been stopped, run the following command:
+   
+   **docker prune -a**
+    

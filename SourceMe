@@ -1,17 +1,32 @@
 #!/bin/bash
 
-export MICROSERVICE_PROJECT_HOME="$( cd "$( dirname $0 )" && pwd )"
-NODEJS_BIN="${MICROSERVICE_PROJECT_HOME}/node_modules/.bin"
-PROJECT_BIN="${MICROSERVICE_PROJECT_HOME}/bin"
+# console colors to make stuff look nice
+cyan=`tput setaf 6`
+blue=`tput setaf 4`
+magenta=`tput setaf 5`
+standout=`tput smso`
+nostandout=`tput rmso`
+bold=`tput bold`
+clearf=`tput sgr0`
+
+if [[ -z "$MICROSERVICE_PROJECT_HOME" ]]; then
+    export MICROSERVICE_PROJECT_HOME="$( cd "$( dirname $0 )" && pwd )"
+    NODEJS_BIN="${MICROSERVICE_PROJECT_HOME}/node_modules/.bin"
+    PROJECT_BIN="${MICROSERVICE_PROJECT_HOME}/bin"
+    export PATH="${PROJECT_BIN}:${NODEJS_BIN}:${PATH}"
+fi
 
 nvm install  # installs the correct version of NodeJS to run this microservice
 npm install  # installs the dependencies for this microservice
 
+# used by template-microservice, dev-mongo, and PM2
+# referenced in docker-compose.yml, pm2.config.js, and ./config/default.json
 test -d logs || mkdir logs
-#test -d data || mkdir data
 
-export PATHBAK=$PATH;
-export PATH="${PROJECT_BIN}:${NODEJS_BIN}:${PATH}"
+# used by dev-mongo
+# referenced in docker-compose.yml 
+test -d data || mkdir data
+
 
 #
 # --- PM2 Utilities -----------------------------------------------------------
@@ -53,51 +68,64 @@ function pnuke {
 #
 
 alias dps='docker ps'
-alias dlog='docker logs'
+alias dcids='docker ps --format "{{.ID}}"' # get list of container IDs 
+alias dnuke='dkill $(dcids)'   # kill all the running containers
+alias dlogs='docker logs'      
 alias dls='docker images'
 alias drmi='docker rmi'
-alias dnuke='docker system prune -a'
 
-alias dcup='docker-compose up -d'
-alias dcdown='docker-compose down'
-alias dcnuke='docker-compose down --rmi all --remove-orphans'
+# prunes the the docker image cache, leaving 
+# images only for running containers
+alias dprune='docker system prune -a'   
 
+alias dc='docker-compose' # also known to be an arbitrary precision calculator
+alias dcup='dc up -d'     # bring up one or all containers
+
+# kills only the containers managed by docker-compose.yml 
+# and then removes all the cached images associated with 
+# said containers
+alias dcnuke='dc down --rmi all --remove-orphans'
+
+# -- takes a space-delimited list of container IDs, names, or tags (or mixed!)
 function dkill {
-    docker stop $1 && docker rm $1
+    while [[ ! -z "$1" ]]; do
+        docker stop $1 && docker rm $1
+        shift
+    done
 }
-
 
 #
 # --- Overall process management functions ------------------------------------
 #
-function devnuke {
-    # stop the PM2 processes that depend on dev-mongo and then kill dev-mongo
-    pnuke
-
-    # remove the directories that were created by SourceMe
-    rm -rf node_modules && rm -rf logs && rm -rf data
-
-    # restore sanity to environment variables
-    if [[ ! -z $PATHBAK ]]; then
-        PATH=$PATHBAK && unset PATHBAK
-    fi
-}
 
 # using this network name is a real hack! gross!!!
 alias dmongo='docker run -it --rm --network nodejsdockertemplate_default --link dev-mongo:mongo mongo mongo dev-mongo/template_microservice -u janie -p'
 
+function devnuke {
+    echo "${cyan}Killing all PM2 process ... ${clearf}"
+    silence=`pnuke`
+
+    echo "${cyan}Killing all running Docker containers ... ${clearf}"
+    silence=`dnuke`
+
+    echo "${cyan}Removing all independent Docker images ... ${clearf}"
+    dprune
+
+    rm -rf node_modules
+    rm -rf logs 
+    rm -rf data
+    rm -rf sandbox
+    echo "${cyan}${bold}#"
+    echo "# ${standout}REMINDER:${nostandout} the ephemeral files, docker containers, and docker images have been"
+    echo "#           removed. Exit this shell session to destroy the environment" 
+    echo "#           variables, aliases, and functions     ${magenta}:) ${cyan}"
+    echo "# ${clearf}"
+}
 
 #
-# Exit Messages
+# --- Exit Messages -----------------------------------------------------------
 #
-cyan=`tput setaf 6`
-blue=`tput setaf 4`
-standout=`tput smso`
-nostandout=`tput rmso`
-bold=`tput bold`
-echo "${cyan}#"
+echo "${bold}${cyan}#"
 echo "# ${standout}REMEMBER${nostandout} to create the dev-mongo image (with ${blue}./bin/init-mongodb.sh${cyan}), and then "
-echo "#          start the container if necessary, with '${blue}dcup dev-mongo${cyan}' ${bold}    :)"
-tput sgr0
-echo "${cyan}#"
-tput sgr0
+echo "#          start the container if necessary, with '${blue}dcup dev-mongo${cyan}'   ${magenta}  :)${cyan}"
+echo "#${clearf}"
