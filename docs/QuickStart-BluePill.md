@@ -19,10 +19,8 @@ Here is the general workflow for the _Development_ stage of the microservice:
  
    <pre>
    npm run start
-   </pre>
-  
-    or
-  
+   </pre> 
+     or 
    <pre>
    pm2 start pm2.config.json
    </pre>
