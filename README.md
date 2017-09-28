@@ -53,6 +53,6 @@ You have before you two option; you can take the Blue Pill to make your life
 easy, or you can the Red Pill and do everything manually, because suffering 
 is what makes us human.
 
-  * [**The Red Pill**](docs/GettingStarted-RedPill.md)
-  * [**The Blue Pill**](docs/GettingStarted-BluePill.md)
+  * [**The Red Pill**](docs/QuickStart-RedPill.md)
+  * [**The Blue Pill**](docs/QuickStart-BluePill.md)
   
