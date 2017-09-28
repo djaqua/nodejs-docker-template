@@ -7,7 +7,9 @@ Choose the blue pill; use the *SourceMe* file to make life easy:
 
  1. Initialize the project and and get a bunch of aliases and utilities:
  
-    **source SourceMe** 
+    <pre>
+    source SourceMe
+    </pre>
  
 ## Development 
 
@@ -15,27 +17,39 @@ Here is the general workflow for the _Development_ stage of the microservice:
 
  1. Start the microservice:
  
-   **npm run start**
+   <pre>
+   npm run start
+   </pre>
   
     or
   
-   **pm2 start pm2.config.json**
+   <pre>
+   pm2 start pm2.config.json
+   </pre>
     
  2. Show the status of a process or omit the process-id to show the status of all processes:
   
-   **pps _process-id_** 
+   <pre>
+   pps &lt;process-id&gt;
+   </pre> 
      
  3. Tail the log for a process or omit the process-id to tail the combined log for all processes:
  
-   **plogs _process-id_**  
+   <pre>
+   plogs &lt;process-id&gt;
+   </pre>
 
  4. Stop the microservice, flush the logs, then restart the microservice: 
  
-   **pcycle _process-id_**
+   <pre>
+   pcycle &lt;process-id&gt;
+   </pre>
 
  5. Kill all the pm2 processes:
    
-   **pnuke**
+   <pre>
+   pnuke
+   </pre>
     
 ## Integration Testing
 Follow these steps if you have modified *./config*, *./src*, *./package.json*, 
@@ -44,15 +58,21 @@ environment
  
  1. Ensure that the development ecosystem is up and running:
 
-    **dcup dev-mongo**
+    <pre>
+    dcup dev-mongo
+    </pre>
      
  2. Build and run the microservice docker image:
 
-    **dcycle --image _template-microservice-image-tag_**    
+    <pre>
+    dcycle --image &lt;template-microservice-image-tag&gt;
+    </pre>
      
  3. Nuke **all** the containers and images. If you used *SourceMe*, run the
     following command:
 
-     **dnuke**
+     <pre>
+     dnuke
+     </pre>
 
     
