@@ -170,16 +170,16 @@ environment
  3. Nuke **all** the containers and images. If you used *SourceMe*, run the
     following command:
 
-   **pnuke**
+     **pnuke**
 
    But, if you chose the red pill, run the following commands:
 
-   a. For each running container (**dps** or **docker ps**), run the following 
+  1. For each running container (**dps** or **docker ps**), run the following 
       commands:
    
-   **docker stop _template-microservice-container-tag_**
+     **docker stop _template-microservice-container-tag_**
    
-   b. Once all the containers have been stopped, run the following command:
+  2. Once all the containers have been stopped, run the following command:
    
-   **docker prune -a**
+     **docker prune -a**
     
