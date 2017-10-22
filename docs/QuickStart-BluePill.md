@@ -15,7 +15,13 @@ Choose the blue pill; use the *SourceMe* file to make life easy:
 
 Here is the general workflow for the _Development_ stage of the microservice:
 
- 1. Start the microservice:
+ 1. Ensure that the database service is running with the following commands:
+   <pre>
+   dbinit
+   dcup dev-mongo
+   </pre>
+
+ 2. Start the microservice:
  
    <pre>
    npm run start
@@ -25,25 +31,25 @@ Here is the general workflow for the _Development_ stage of the microservice:
    pm2 start pm2.config.json
    </pre>
     
- 2. Show the status of a process or omit the process-id to show the status of all processes:
+ 3. Show the status of a process or omit the process-id to show the status of all processes:
   
    <pre>
    pps &lt;process-id&gt;
    </pre> 
      
- 3. Tail the log for a process or omit the process-id to tail the combined log for all processes:
+ 4. Tail the log for a process or omit the process-id to tail the combined log for all processes:
  
    <pre>
    plogs &lt;process-id&gt;
    </pre>
 
- 4. Stop the microservice, flush the logs, then restart the microservice: 
+ 5. Stop the microservice, flush the logs, then restart the microservice: 
  
    <pre>
    pcycle &lt;process-id&gt;
    </pre>
 
- 5. Kill all the pm2 processes:
+ 6. Kill all the pm2 processes:
    
    <pre>
    pnuke
@@ -57,13 +63,14 @@ environment
  1. Ensure that the development ecosystem is up and running:
 
     <pre>
+    dbinit
     dcup dev-mongo
     </pre>
      
- 2. Build and run the microservice docker image:
+ 2. Stop, rebuild images, and start multiple docker services:
 
     <pre>
-    dcycle --image &lt;template-microservice-image-tag&gt;
+    dcycle service-1 service-2 service-3 ...
     </pre>
      
  3. Nuke **all** the containers and images. If you used *SourceMe*, run the
