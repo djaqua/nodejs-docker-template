@@ -15,6 +15,8 @@ RUN mkdir logs; \
 # and production inherit.
 EXPOSE 80
 
+# TODO don't set NODE_ENV here; specify it in docker-compose.yml
+
 # -- only copy the actual microservice stuff, not the project overhead
 COPY ./pm2.config.json /template_microservice_workdir/pm2.config.json
 COPY ./config /template_microservice_workdir/config

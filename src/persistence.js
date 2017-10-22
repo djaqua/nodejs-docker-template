@@ -29,7 +29,7 @@ logger.debug('mongoose.connection.readyState=' + mongoose.connection.readyState)
 
 var Todo = mongoose.model('Todo', {
   text: String,
-  compvared: Date,
+  completed: Date,
   created: { type: Date, default: Date.now }
 });
 
@@ -56,9 +56,9 @@ module.exports = {
   },
 
   /* The 'U' in CRUD */
-  compvareTodo: function(todoId) {
+  completeTodo: function(todoId) {
     var retVal = null;
-    Todo.update(todoId, {compvared: new Date()}, (err, todoModel) => {
+    Todo.update(todoId, {completed: new Date()}, (err, todoModel) => {
       if (err) {
         logger.error(err);
       }
@@ -69,7 +69,7 @@ module.exports = {
 
   /* The 'D' in CRUD */
   removeTodo: function(todoId) {
-    Todo.devareOne({
+    Todo.deleteOne({
       _id:todoId
     }, function(err, todoModel) {
       if (err) {

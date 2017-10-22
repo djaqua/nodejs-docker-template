@@ -24,12 +24,13 @@ services:
 
   dev-mongo:
 
+    # Updates to these parameters require updates to SourceMe and 
+    # the utilities in ./bin/
     build: ./sandbox/docker-mongodb
-    
     image: djaqua/mongodb:latest
     
-    container_name: "dev-mongo"
-    
+    container_name: 'dev-mongo'
+
     ports:
       - 27017:27017
     volumes:
@@ -46,3 +47,4 @@ services:
       - MONGODB_USERNAME=janie
       - MONGODB_PASSWORD=BylmOlirt5owEew#
       - MONGODB_DBNAME=template_microservice
+  

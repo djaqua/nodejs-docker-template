@@ -31,19 +31,6 @@ test -d data || mkdir data
 #
 # --- PM2 Utilities -----------------------------------------------------------
 #
-function pcycle {
-    procId=${1:-0}
-    pm2 stop $procId
-    if [[ $? -eq 0 ]]; then
-        pm2 flush --silent
-        pm2 start $procId
-        if [[ ! -z "$2" ]]; then
-            pm2 logs $procId --lines $2
-        else
-            pm2 logs $procId
-        fi
-    fi
-}
 
 function plogs {
   procId=${1:-0}
@@ -62,6 +49,21 @@ function pkill {
 function pnuke {
     pkill all
 }
+
+function pcycle {
+    procId=${1:-0}
+    pm2 stop $procId
+    if [[ $? -eq 0 ]]; then
+        pm2 flush --silent
+        pm2 start $procId
+        if [[ ! -z "$2" ]]; then
+            pm2 logs $procId --lines $2
+        else
+            pm2 logs $procId
+        fi
+    fi
+}
+
 
 #
 # --- Docker Utilities --------------------------------------------------------
@@ -95,11 +97,111 @@ function dkill {
 }
 
 #
+# Stops and removes the each of the specified services, rebuilds each of
+# their corresponding images, and then starts each of the services again
+#
+function dcycle {
+
+    if [[ $# -lt 1 ]]; then
+        echo "Cowardly refusing to guess which image you want to cycle"
+        echo "Usage:"
+        echo "\tdcycle <image-name>"
+        echo "\twhere <image-name> is one of the images specified in docker-compose.yml" 
+        echo "Example Usage:"
+        echo "\tdcycle template-microservice-container"
+    fi
+
+    stop_short=0
+
+    index=1
+    while [[ $index -le $# ]]; do
+        current_service=${@:$index:1}
+        index=$[$index +1]
+
+        service_line=`grep -e "^\s*$current_service" docker-compose.yml`
+        if [[ -z $service_line ]]; then
+            echo "Could not locate the \"$current_service\" service in docker-compose.yml."
+            stop_short=1;
+            continue;
+        fi
+ 
+        # Get the section starting from the service name to the container name
+        container_section=`sed -n -e "/^\s*$current_service/,/container_name/p" docker-compose.yml`
+        if [[ -z "$container_section" ]]; then
+            echo "Could not determine the container name for the \"$current_service\"  service."
+            stop_short=1;
+        fi
+ 
+        # Get the section starting from the service name to the container name
+        image_section=`sed -n -e "/^\s*$current_service/,/image/p" docker-compose.yml`
+        if [[ -z "$image_section" ]]; then
+            echo "Could not determine the image for the \"$current_service\"  service."
+            stop_short=1;
+        fi
+
+    done
+
+    if [[ $stop_short -eq 1 ]]; then
+        echo "Due to the problems listed above, dcycle is cowardly refusing to proceed."
+        return 1
+    fi
+
+    index=1
+    while [[ $index -le $# ]]; do
+        current_service=${@:$index:1}
+          
+        container_section=`sed -n -e "/^\s*$current_service/,/container_name/p" docker-compose.yml`
+        container_name=`echo $container_section | awk '/container_name/ { print $2 }' | tr -d \'`
+        
+        dkill $container_name
+
+        index=$[$index +1]
+    done
+
+    index=1
+    while [[ $index -le $# ]]; do
+        current_service=${@:$index:1}
+  
+        # Get the section starting from the service name to the container name
+        image_section=`sed -n -e "/^\s*$current_service/,/image/p" docker-compose.yml`
+        image_name=`echo $image_section | awk '/image/ { print $2 }' | tr -d \'`
+
+        drmi $image_name
+        
+        index=$[$index +1]
+    done
+
+    index=1
+    while [[ $index -le $# ]]; do
+        dcup ${@:$index:1}
+        index=$[$index +1]
+    done
+}
+
+
+#
 # --- Overall process management functions ------------------------------------
 #
 
-# using this network name is a real hack! gross!!!
+# using this network name is a real hack!!! gross!!!
 alias dmongo='docker run -it --rm --network nodejsdockertemplate_default --link dev-mongo:mongo mongo mongo dev-mongo/template_microservice -u janie -p'
+
+mongo_repo="${MONGODB_REPOSITORY:-git@github.com:djaqua/docker-mongodb.git}"
+mongo_src="${MONGODB_SOURCE:-./sandbox/docker-mongodb}"
+mongo_img="${MONGODB_IMAGE_NAME:-djaqua/mongodb}"
+
+function dbinit {
+    silence=`dls | grep $mongo_img`
+    if [[ 1 -eq $? ]]; then
+        if [[ ! -f $mongo_src/Dockerfile ]]; then
+            git clone $mongo_repo $mongo_src
+        fi
+        docker build -t $mongo_img $mongo_src
+    else
+        echo "${cyan}Database Docker image already exists ${magenta}:)${clearf}"
+    fi
+    
+}
 
 function devnuke {
     echo "${cyan}Killing all PM2 process ... ${clearf}"
@@ -107,9 +209,6 @@ function devnuke {
 
     echo "${cyan}Killing all running Docker containers ... ${clearf}"
     silence=`dnuke`
-
-    echo "${cyan}Removing all independent Docker images ... ${clearf}"
-    dprune
 
     rm -rf node_modules
     rm -rf logs 
@@ -123,9 +222,10 @@ function devnuke {
 }
 
 #
-# --- Exit Messages -----------------------------------------------------------
+# --- Exit Notes --------------------------------------------------------------
 #
 echo "${bold}${cyan}#"
-echo "# ${standout}REMEMBER${nostandout} to create the dev-mongo image (with ${blue}./bin/init-mongodb.sh${cyan}), and then "
+echo "# ${standout}REMEMBER${nostandout} to create the dev-mongo image (with ${blue}dbinit${cyan}), and then "
 echo "#          start the container if necessary, with '${blue}dcup dev-mongo${cyan}'   ${magenta}  :)${cyan}"
 echo "#${clearf}"
+
