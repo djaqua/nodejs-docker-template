@@ -1,4 +1,4 @@
-FROM google/nodejs
+FROM node:8.9.1
 
 # WORKDIR doesn't necessarily have to match the directory name of the
 # microservice. But, whatever WORKDIR is specified here also needs to
@@ -6,6 +6,7 @@ FROM google/nodejs
 WORKDIR /template_microservice_workdir
 
 COPY package.json /template_microservice_workdir
+
 RUN npm install pm2 --global
 RUN npm install --production
 RUN mkdir logs; \

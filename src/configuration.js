@@ -1,17 +1,17 @@
-var config = require('config');
-var _ = require('lodash');
+const config = require('config');
+const _ = require('lodash');
 
 
 /**
  * var cache - the cache for the configuration system.
  */
-var cache = {
+const cache = {
 };
 
 /**
  * The values of the command line arguments.
  */
-var yargs = require('yargs')
+const yargs = require('yargs')
   .string('loglevel')
   .describe('loglevel', 'Set the level for the logging system')
   .choices('loglevel', _.keys(config.get('logging.winston.levels')))
@@ -34,11 +34,11 @@ var yargs = require('yargs')
  * @param  {string} cfgKey a key for which to get an environment variable
  * @return {string}        the value of the environment variable
  */
-var getPrioritizedValue = function(cfgKey) {
+const getPrioritizedValue = function(cfgKey) {
 
-  var argKey = null;
-  var envKey = null;
-  var value = null;
+  let argKey = null;
+  let envKey = null;
+  let value = null;
 
   //
   // Process the keys to get their corresponding alter-keys

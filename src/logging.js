@@ -1,9 +1,9 @@
-var conf = require('./configuration');
+const conf = require('./configuration');
 
-var winston = require('winston');
-var _ = require('lodash');
-var dateFormat = require('dateformat');
-var uuid = require('uuid');
+const winston = require('winston');
+const _ = require('lodash');
+const dateFormat = require('dateformat');
+const uuid = require('uuid');
 
 
 
@@ -12,15 +12,15 @@ if (conf('logging.winston.useColors')) {
   winston.addColors(conf('logging.winston.colors'));
 }
 
-var cache = {
+const cache = {
 };
 
 /**
- * var createConsoleTransport - description
+ * let createConsoleTransport - description
  *
  * @return {winston.transports.Console}  description
  */
-var createConsoleTransport = function() {
+const createConsoleTransport = function() {
   return new (winston.transports.Console)({
     name: uuid.v4(),
     colorize: conf('logging.winston.useColors')
@@ -28,26 +28,26 @@ var createConsoleTransport = function() {
 };
 
 /**
- * var getFileTransports - description
+ * let getFileTransports - description
  *
  * @return {Array}  an array of Winston File transports
  */
-var getFileTransports = function() {
+const getFileTransports = function() {
   return _.map( _.values(conf('logging.winston.transports.file')), function(template) {
     return createFileTransport( template );
   } );
 };
 
 /**
- * var createFileTransport - creates a new instance of a Winston File
+ * let createFileTransport - creates a new instance of a Winston File
  * transport.
  *
  * @param  {object} template an object to serve as a template for the
  * varruction of the Winstron File transport
  * @return {Winston.transports.File} a Winston File transport
  */
-var createFileTransport = function(template) {
-  var logfile = template.filename ? template.filename : conf('logging.winston.filenames.defaultFilename');
+const createFileTransport = function(template) {
+  let logfile = template.filename ? template.filename : conf('logging.winston.filenames.defaultFilename');
   return new (winston.transports.File)({
     name: uuid.v4(),
     level: template.level,
@@ -60,22 +60,22 @@ var createFileTransport = function(template) {
 
 
 /**
- * var getFilenameWithPath - description
+ * let getFilenameWithPath - description
  *
  * @param  {string} name description
  * @return {string}      description
  */
-var getFilenameWithPath = function(name) {
+const getFilenameWithPath = function(name) {
   return getLogsDir() + getFilename(name);
 };
 
 
 /**
- * var getLogsDir - description
+ * let getLogsDir - description
  *
  * @return {string}  description
  */
-var getLogsDir = function() {
+const getLogsDir = function() {
   if (!cache.logsDir) {
     // by contract, conf won't cache default values
     cache.logsDir = conf('logging.winston.filenames.logsDir') + '/';
@@ -84,13 +84,13 @@ var getLogsDir = function() {
 }
 
 /**
- * var getFilename - description
+ * let getFilename - description
  *
  * @param  {string} logfile the meaningful name for the file ('general',
  * 'errors', etc)
  * @return {string}         the fully formatted filename
  */
-var getFilename = function(logfile) {
+const getFilename = function(logfile) {
 
 	if (!cache.logFilenameBuilder) {
 
@@ -110,11 +110,11 @@ var getFilename = function(logfile) {
 };
 
 /**
- * var createNewLogger - creates and returns a new instance of a Winston Logger.
+ * let createNewLogger - creates and returns a new instance of a Winston Logger.
  *
  * @return {Winston.Logger}  a new instance of Winston Logger
  */
-var createNewLogger = function() {
+const createNewLogger = function() {
   return new (winston.Logger)({
     level: conf('logging.winston.level'),
     levels: conf('logging.winston.levels'),
@@ -123,12 +123,12 @@ var createNewLogger = function() {
 };
 
 /**
- * var getLogger - gets a cached instance of a Winston logger. If there is no
+ * let getLogger - gets a cached instance of a Winston logger. If there is no
  * instance, then an instance is created, cached, and returned.
  *
  * @return {Winston.Logger}  an instance of Winston Logger
  */
-var getLogger = function() {
+const getLogger = function() {
   if (!cache.logger) {
     cache.logger = createNewLogger();
   }
