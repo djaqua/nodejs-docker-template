@@ -18,7 +18,7 @@ const theMenu = '[<a href=\'/create-one\'>create one</a>]' +
                 '[<a href=\'/read-them-all\'>read them all</a>]' +
                 '[<a href=\'/delete-them-all\'>delete them all</a>]';
 
-logger.notice('Using top level configuration file ' + conf('filename'));
+logger.notice(`Using top level configuration file ${conf('filename')}`);
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 
@@ -46,12 +46,13 @@ app.get('/read-them-all', (req, res) => {
     if (err) {
       logger.error(err);
     }
+    res.send(JSON.stringify(docs));
+
     _.forEach( docs, (doc) => {
       logger.debug(doc.text);
     });
+    return;
   });
-
-  res.send(theMenu);
 });
 
 
@@ -61,7 +62,7 @@ app.get('/create-one', (req, res) => {
 
   let foo = persistence.addTodo('Keep on keep\'n on');
   if (foo) {
-    logger.debug('created Todo item with id: ' + foo._id);
+    logger.debug(`created Todo item with id: ${foo._id}`);
   }
   else {
     logger.error(err);
@@ -73,13 +74,11 @@ app.get('/create-one', (req, res) => {
 app.get('/complete-one', (req, res) => {
   logger.debug('GET /complete-one requested');
 
-  let foo = persistence.addTodo('Keep on keep\'n on');
+  let foo = persistence.completeTodo(req.query.id);
   if (foo) {
-    logger.debug('completed Todo item with id: ' + foo._id);
+    logger.debug(`completed Todo item with id: ${foo._id}`);
   }
-  else {
-    logger.error(err);
-  }
+
   res.send(theMenu);
 });
 
