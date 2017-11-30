@@ -15,15 +15,47 @@
 
     <script>
 
+    /**
+     * Represents an editor for the description of an entry within a To-Do list.
+     */
     var TodoEditor = Vue.extend({
       props: ['todo'],
-      template: `<input type="text" v-model="todo.text"></li>`
+      template: `<input type="text" ref="input" v-model="todo.text"
+                    @keyup.esc="cancelEdit" @keyup.enter="saveText" />`,
+      data: function() {
+        return {
+          textMemento: this.todo.text
+        };
+      },
+      methods: {
+        cancelEdit: function(event) {
+          this.todo.text = this.textMemento;
+          this.$emit("editCancelled");
+        },
+        saveText: function(event) {
+          // TODO: make an API call to save 'todo.text'
+          this.$emit("textSaved");
+        }
+      },
+      mounted: function() {
+        this.$refs.input.focus();
+      }
     });
 
 
+
+    /**
+     * Represents an entry within a To-Do list as a checkbox and a description
+     * of the action to be performed.
+     */
     var TodoEntry = Vue.extend({
       props: ['todo'],
-      template: `<div><input type="checkbox" v-model="todo.completed" v-on:change="completeTodo"><label class="text" for="checkbox">{{ todo.text }}</label></div>`,
+      template: `
+      <div>
+        <input type="checkbox" v-model="todo.completed" @change="completeTodo">
+        <label class="text" for="checkbox">{{ todo.text }}</label>
+      </div>`,
+
       methods: {
         completeTodo: function(event) {
           // TODO: make an API call to complete the todo
@@ -31,11 +63,16 @@
       }
     });
 
+
+    /**
+     * An abstaction over the contents of an
+     */
     var ListItem = Vue.component('list-item', {
       props: ['todo'],
       template: `
-      <li v-on:dblclick="handleDoubleClick" v-on:keypress="handleKeyPress">
-        <component v-bind:is="currentView" v-bind:todo="todo">
+      <li @dblclick="showEditor">
+        <component v-bind:is="currentView" v-bind:todo="todo"
+          @textSaved="showEntry" @editCancelled="showEntry">
         </component>
       </li>`,
       data: function() {
@@ -44,15 +81,10 @@
         };
       },
       methods: {
-        handleDoubleClick: function(event) {
-          // TODO: memoize the current state of todo.text
+        showEditor: function() {
           this.currentView = "editor";
         },
-        handleKeyPress: function(event) {
-          // TODO: determine if the enter key or the escape key was pressed
-          // if the escape key was pressed, reset the state
-          // if the enter key was pressed, make an API call to update the
-          // todo text
+        showEntry: function() {
           this.currentView = "entry";
         }
       },
@@ -62,21 +94,24 @@
       }
     });
 
+    /**
+     * Initializes the Model-View at rhe DOM element identified by "#todo-list"
+     */
     var app = new Vue({
       el: '#todo-list',
       data: {
         todoList: []
+      },
+      beforeCreate: function() {
+        $.ajax({
+          url: '/read-them-all'
+        }).done(function(data) {
+          app.todoList = JSON.parse(data);
+        });
       }
     });
 
-    $(function() {
-      $.ajax({
-        url: '/read-them-all'
-      }).done(function(data) {
-        app.todoList = JSON.parse(data);
-      });
-    });
     </script>
-    
+
   </body>
 </html>
