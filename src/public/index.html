@@ -9,11 +9,16 @@
   </head>
   <body>
 
-    <ul id="todo-list">
-      <list-item v-for="item in todoList" v-bind:todo="item" v-bind:key="item._id">
-    </ul>
+    <div id="todo-list">
+      <prototype-item @item-persisted="fetchData"></prototype-item>
+      <ul>
+        <list-item v-for="item in todoList" v-bind:todo="item" v-bind:key="item._id">
+      </ul>
+    </div>
 
     <script>
+
+    const DEFAULT_PROTOTYPE_ITEM_TEXT = '';
 
     /**
      * Represents an editor for the description of an entry within a To-Do list.
@@ -30,11 +35,23 @@
       methods: {
         cancelEdit: function(event) {
           this.todo.text = this.textMemento;
-          this.$emit("editCancelled");
+          this.$emit("edit-cancelled");
         },
         saveText: function(event) {
-          // TODO: make an API call to save 'todo.text'
-          this.$emit("textSaved");
+          var self = this;
+          // TODO: make an API call to save 'todo.text'\
+
+          $.ajax({
+            url: `/updateText/${self.todo._id}/${self.todo.text}`,
+            type: 'PUT',
+            dataType: 'json', // what is expected back from the server
+
+          }).done(function(data) {
+              self.$emit("text-saved");
+          }).fail(function(error){
+            console.log(error.responseText);
+            self.$emit("text-not-saved");
+          });
         }
       },
       mounted: function() {
@@ -52,27 +69,69 @@
       props: ['todo'],
       template: `
       <div>
-        <input type="checkbox" v-model="todo.completed" @change="completeTodo">
+        <input disabled v-if="todo.completed" type="checkbox" v-model="todo.completed" @change="completeTodo">
+        <input v-else type="checkbox" v-model="todo.completed" @change="completeTodo">
         <label class="text" for="checkbox">{{ todo.text }}</label>
       </div>`,
 
       methods: {
+
         completeTodo: function(event) {
-          // TODO: make an API call to complete the todo
+          var self = this;
+          $.ajax({
+            url: `/complete/${self.todo._id}`,
+            type: 'PUT',
+            dataType: 'json', // what is expected back from the server
+
+          }).done(function(data) {
+              self.$emit("todo-completed");
+          }).fail(function(error){
+            console.log(error.responseText);
+            self.$emit("todo-not-completed");
+          });
         }
       }
     });
 
 
+    Vue.component('prototype-item', {
+      template: `<input type="text" v-model="text" @keyup.enter="persistEntry" @keyup.esc="cancelEntry" />`,
+      data: function() {
+        return {
+          text: DEFAULT_PROTOTYPE_ITEM_TEXT
+        };
+      },
+      methods: {
+        cancelEntry: function() {
+          this.text = DEFAULT_PROTOTYPE_ITEM_TEXT;
+          this.$emit("entry-cancelled");
+        },
+        persistEntry: function() {
+          var self = this;
+          $.ajax({
+            url: `/create/${self.text}`,
+            type: 'POST',
+            dataType: 'json'
+          }).done(function(data) {
+            self.text = DEFAULT_PROTOTYPE_ITEM_TEXT;
+            self.$emit("item-persisted");
+          }).fail(function(error) {
+            self.$emit("item-not-persisted");
+          });
+        }
+      }
+
+    });
+
     /**
      * An abstaction over the contents of an
      */
-    var ListItem = Vue.component('list-item', {
+    Vue.component('list-item', {
       props: ['todo'],
       template: `
       <li @dblclick="showEditor">
         <component v-bind:is="currentView" v-bind:todo="todo"
-          @textSaved="showEntry" @editCancelled="showEntry">
+          @text-saved="showEntry" @edit-cancelled="showEntry" @text-not-saved="handleError">
         </component>
       </li>`,
       data: function() {
@@ -86,6 +145,9 @@
         },
         showEntry: function() {
           this.currentView = "entry";
+        },
+        handleError: function() {
+          alert("There was an error; check the console for details.");
         }
       },
       components: {
@@ -102,12 +164,20 @@
       data: {
         todoList: []
       },
-      beforeCreate: function() {
-        $.ajax({
-          url: '/read-them-all'
-        }).done(function(data) {
-          app.todoList = JSON.parse(data);
-        });
+
+      mounted: function() {
+        this.fetchData();
+      },
+
+      methods: {
+        fetchData: function() {
+          var self = this;
+          $.ajax({
+            url: '/all'
+          }).done(function(data) {
+            self.todoList = JSON.parse(data);
+          });
+        }
       }
     });
 
