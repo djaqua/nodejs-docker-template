@@ -21,12 +21,17 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.get('/all', (req, res) => {
   logger.debug('GET /all requested');
-  Todo.find({}, function (err, docs) {
+
+  let todoQuery = {completed:null};
+  if (req.query.showCompleted === 'true' || req.query.showCompleted === '') {
+     todoQuery = {};
+  }
+
+  Todo.find(todoQuery, function (err, docs) {
     if (err) {
       logger.error(err);
     }
     res.send(JSON.stringify(docs));
-
   });
 });
 
@@ -41,7 +46,6 @@ app.post('/create/:text', (req, res) => {
     }
     res.send(`{"result":"ok"}`);
   });
-
 });
 
 app.put('/updateText/:id/:text', (req, res) => {

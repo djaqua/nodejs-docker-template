@@ -21,6 +21,11 @@ logger.debug(`mongoose.connection.readyState=${mongoose.connection.readyState}`)
 
 
 module.exports = {
+
+  /**
+   * Represents a document in the 'todos' collection of the template_microservice
+   * database.   
+   */
   Todo: mongoose.model('Todo', {
     text: String,
     completed: Date,
