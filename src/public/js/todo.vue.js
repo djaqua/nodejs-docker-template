@@ -1,4 +1,4 @@
-const DEFAULT_PROTOTYPE_ITEM_TEXT = '';
+var DEFAULT_PROTOTYPE_ITEM_TEXT = '';
 
 /**
  * Represents an editor for the description of an entry within a To-Do list.
@@ -13,9 +13,17 @@ var TodoEditor = Vue.extend({
     };
   },
   methods: {
+
+    /**
+     * cancelEdit - resets the text value of the todo back to its original state
+     * and notifies concerned parties that the user cancelled the edit.
+     *
+     * @param  {type} event description
+     * @return {type}       description
+     */
     cancelEdit: function(event) {
       this.todo.text = this.textMemento;
-      this.$emit("edit-cancelled");
+      this.$emit('edit-cancelled');
     },
     saveText: function(event) {
       var self = this;
@@ -25,10 +33,10 @@ var TodoEditor = Vue.extend({
         dataType: 'json', // what is expected back from the server
 
       }).done(function(data) {
-          self.$emit("text-saved");
+          self.$emit('text-saved');
       }).fail(function(error){
         console.log(error.responseText);
-        self.$emit("text-not-saved");
+        self.$emit('text-not-saved');
       });
     }
   },
@@ -46,11 +54,14 @@ var TodoEditor = Vue.extend({
 var TodoEntry = Vue.extend({
   props: ['todo'],
   template: `
-  <div>
+  <li v-if="this.todo.completed">
     <input disabled v-if="todo.completed" type="checkbox" v-model="todo.completed" >
-    <input v-else type="checkbox"  @change="completeTodo">
     <label class="text" for="checkbox">{{ todo.text }}</label>
-  </div>`,
+  </li>
+  <li v-else>
+    <input type="checkbox" @change="completeTodo">
+    <label class="text" for="checkbox" @dblclick="$emit('dblclick')">{{ todo.text }}</label>
+  </li>`,
 
   methods: {
 
@@ -62,10 +73,10 @@ var TodoEntry = Vue.extend({
         dataType: 'json', // what is expected back from the server
 
       }).done(function(data) {
-          self.$emit("todo-completed");
+          self.$emit('todo-completed');
       }).fail(function(error){
         console.log(error.responseText);
-        self.$emit("todo-not-completed");
+        self.$emit('todo-not-completed');
       });
     }
   },
@@ -82,7 +93,7 @@ Vue.component('list-item-filter', {
   methods: {
     toggleShowCompleted: function() {
       this.config.showCompleted = !this.config.showCompleted;
-      this.$emit("item-filters-changed");
+      this.$emit('item-filters-changed');
     },
   }
 });
@@ -99,7 +110,7 @@ Vue.component('list-item-builder', {
   methods: {
     cancelEntry: function() {
       this.text = DEFAULT_PROTOTYPE_ITEM_TEXT;
-      this.$emit("entry-cancelled");
+      this.$emit('entry-cancelled');
     },
     persistEntry: function() {
       var self = this;
@@ -109,9 +120,9 @@ Vue.component('list-item-builder', {
         dataType: 'json'
       }).done(function(data) {
         self.text = DEFAULT_PROTOTYPE_ITEM_TEXT;
-        self.$emit("todo-created");
+        self.$emit('todo-created');
       }).fail(function(error) {
-        self.$emit("todo-not-created");
+        self.$emit('todo-not-created');
       });
     }
   }
@@ -126,12 +137,10 @@ Vue.component('list-item', {
   props: ['todo'],
 
   template: `
-  <li @dblclick="showEditor">
     <component v-bind:is="currentView" v-bind:todo="todo"
       @text-saved="showEntry" @edit-cancelled="showEntry" @text-not-saved="handleError"
-      @todo-completed="todoCompleted" />
-    </component>
-  </li>`,
+      @todo-completed="todoCompleted" @dblclick="showEditor"/>
+    </component>`,
 
   data: function() {
     return {
@@ -141,7 +150,9 @@ Vue.component('list-item', {
 
   methods: {
     showEditor: function() {
-      this.currentView = 'editor';
+      if (!this.todo.completed) {
+        this.currentView = 'editor';
+      }
     },
     showEntry: function() {
       this.currentView = 'entry';
@@ -166,13 +177,12 @@ var app = new Vue({
   el: '#todo-list-root',
   template: `
   <div>
-
     <list-item-builder @todo-created="fetchData"/>
     <list-item-filter v-bind:config="filterConfig" @item-filters-changed="fetchData"/>
     <ul>
-      <list-item v-for="item in todoList" v-bind:todo="item" v-bind:key="item._id" @todo-completed="fetchData"></list-item>
+      <list-item v-for="item in todoList" v-bind:todo="item" v-bind:key="item._id" @todo-completed="fetchData" />
+      </list-item>
     </ul>
-
   </div>`,
 
   data: {
