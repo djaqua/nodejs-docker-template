@@ -1,4 +1,5 @@
 var DEFAULT_PROTOTYPE_ITEM_TEXT = '';
+var DEFAULT_FILTER_SHOW_COMPLETED = false;
 
 /**
  * Represents an editor for the description of an entry within a To-Do list.
@@ -27,14 +28,12 @@ var TodoEditor = Vue.extend({
     },
     saveText: function(event) {
       var self = this;
-      $.ajax({
-        url: `/updateText/${self.todo._id}/${self.todo.text}`,
-        type: 'PUT',
-        dataType: 'json', // what is expected back from the server
-
-      }).done(function(data) {
+      this.$http.put('/updateText', {
+        id: self.todo._id,
+        text: self.todo.text
+      }).then(function(data) {
           self.$emit('text-saved');
-      }).fail(function(error){
+      }, function(error){
         console.log(error.responseText);
         self.$emit('text-not-saved');
       });
@@ -67,14 +66,11 @@ var TodoEntry = Vue.extend({
 
     completeTodo: function(event) {
       var self = this;
-      $.ajax({
-        url: `/complete/${self.todo._id}`,
-        type: 'PUT',
-        dataType: 'json', // what is expected back from the server
-
-      }).done(function(data) {
+      this.$http.put('/complete', {
+        id: self.todo._id
+      }).then(function(data) {
           self.$emit('todo-completed');
-      }).fail(function(error){
+      }, function(error){
         console.log(error.responseText);
         self.$emit('todo-not-completed');
       });
@@ -114,14 +110,12 @@ Vue.component('list-item-builder', {
     },
     persistEntry: function() {
       var self = this;
-      $.ajax({
-        url: `/create/${self.text}`,
-        type: 'POST',
-        dataType: 'json'
-      }).done(function(data) {
+      this.$http.post('/create', {
+        text: self.text
+      }).then(function(data) {
         self.text = DEFAULT_PROTOTYPE_ITEM_TEXT;
         self.$emit('todo-created');
-      }).fail(function(error) {
+      }, function(error) {
         self.$emit('todo-not-created');
       });
     }
@@ -187,7 +181,7 @@ var app = new Vue({
 
   data: {
     filterConfig: {
-      showCompleted: false
+      showCompleted: DEFAULT_FILTER_SHOW_COMPLETED
     },
     todoList: []
   },
@@ -199,11 +193,10 @@ var app = new Vue({
   methods: {
     fetchData: function() {
       var self = this;
-      $.ajax({
-        url: '/all' + (self.filterConfig.showCompleted ? '?showCompleted' : '')
-      }).done(function(data) {
-        self.todoList = JSON.parse(data);
-      }).fail(function(err) {
+      var fetchQuery = (this.filterConfig.showCompleted ? '?showCompleted' : '');
+      this.$http.get('/all' + fetchQuery, {}).then(function(data) {
+        self.todoList = data.body;
+      }, function(err) {
         console.log("Error from server: " + err);
       });
     }

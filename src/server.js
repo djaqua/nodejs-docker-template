@@ -10,6 +10,7 @@ const {
 } = require('./persistence');
 
 const _ = require('lodash');
+const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -18,6 +19,16 @@ const port = conf('service.port');
 logger.notice(`Using top level configuration file ${conf('filename')}`);
 
 app.use('/', express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.post('/proof', (req, res) => {
+  logger.debug('GET /proof requested');
+
+  res.send(JSON.stringify({
+    message: 'hello'
+  }))
+});
 
 app.get('/all', (req, res) => {
   logger.debug('GET /all requested');
@@ -35,9 +46,9 @@ app.get('/all', (req, res) => {
   });
 });
 
-app.post('/create/:text', (req, res) => {
+app.post('/create', (req, res) => {
   logger.debug('POST /create requested');
-  const text = req.params.text;
+  const text = req.body.text;
 
   let todo = new Todo({text: text});
   todo.save(function(err, obj) {
@@ -48,14 +59,14 @@ app.post('/create/:text', (req, res) => {
   });
 });
 
-app.put('/updateText/:id/:text', (req, res) => {
+app.put('/updateText', (req, res) => {
 
   logger.debug('PUT /updateText requested');
 
   const {
     id,
     text
-  } = req.params;
+  } = req.body;
 
   logger.debug("req.params.id: " + id);
   logger.debug("req.params.text: " + text);
@@ -73,11 +84,11 @@ app.put('/updateText/:id/:text', (req, res) => {
   });
 });
 
-app.put('/complete/:id', (req, res) => {
+app.put('/complete', (req, res) => {
 
   logger.debug('PUT /complete requested');
 
-  const id = req.params.id;
+  const id = req.body.id;
 
   logger.debug("req.params.id: " + id);
 
