@@ -4,10 +4,17 @@ var DEFAULT_FILTER_SHOW_COMPLETED = false;
 /**
  * Represents an editor for the description of an entry within a To-Do list.
  */
-var TodoEditor = Vue.extend({
+var ItemEditor = Vue.extend({
   props: ['todo'],
-  template: `<input type="text" ref="input" v-model="todo.text"
-                @keyup.esc="cancelEdit" @keyup.enter="saveText" />`,
+  template: `
+    <li class="list-item">
+      <div class="item-actions">
+        <span class="action-icon fa fa-save" aria-hidden="true" @click="saveText"></span>
+        <span class="action-icon fa fa-undo" aria-hidden="true" @click="cancelEdit"></span>
+      </div>
+      <input class="item-text" type="text" ref="input" v-model="todo.text"
+          @keyup.esc="cancelEdit" @keyup.enter="saveText" />
+    </li>`,
   data: function() {
     return {
       textMemento: this.todo.text
@@ -50,16 +57,21 @@ var TodoEditor = Vue.extend({
  * Represents an entry within a To-Do list as a checkbox and a description
  * of the action to be performed.
  */
-var TodoEntry = Vue.extend({
+var ItemEntry = Vue.extend({
   props: ['todo'],
   template: `
-  <li v-if="this.todo.completed">
-    <input disabled v-if="todo.completed" type="checkbox" v-model="todo.completed" >
-    <label class="text" for="checkbox">{{ todo.text }}</label>
+  <li v-if="this.todo.completed" class="list-item">
+    <div class="item-actions">
+      <input disabled v-if="todo.completed" type="checkbox" v-model="todo.completed" />
+    </div>
+    <label class="item-text" class="item-text" for="checkbox">{{ todo.text }}</label>
   </li>
-  <li v-else>
-    <input type="checkbox" @change="completeTodo">
-    <label class="text" for="checkbox" @dblclick="$emit('dblclick')">{{ todo.text }}</label>
+  <li v-else class="list-item">
+    <div class="item-actions">
+      <input type="checkbox" @change="completeTodo" />
+      <span class="action-icon fa fa-edit" aria-hidden="true" @click="$emit('edit-item')"></span>
+    </div>
+    <label class="item-text" for="checkbox" @dblclick="$emit('edit-item')">{{ todo.text }}</label>
   </li>`,
 
   methods: {
@@ -82,7 +94,7 @@ var TodoEntry = Vue.extend({
 Vue.component('list-item-filter', {
   props: ['config'],
   template: `
-  <div>
+  <div class="list-item-filter" >
     <input type="checkbox" name="showCompleted" @change="toggleShowCompleted"/>
     <label for="showCompleted">Show completed</label>
   </div>`,
@@ -96,7 +108,7 @@ Vue.component('list-item-filter', {
 
 Vue.component('list-item-builder', {
   template: `
-  <input type="text" v-model="text" @keyup.enter="persistEntry" @keyup.esc="cancelEntry" />
+  <input class="list-item-builder" type="text" v-model="text" @keyup.enter="persistEntry" @keyup.esc="cancelEntry" />
   `,
   data: function() {
     return {
@@ -133,7 +145,7 @@ Vue.component('list-item', {
   template: `
     <component v-bind:is="currentView" v-bind:todo="todo"
       @text-saved="showEntry" @edit-cancelled="showEntry" @text-not-saved="handleError"
-      @todo-completed="todoCompleted" @dblclick="showEditor"/>
+      @todo-completed="todoCompleted" @edit-item="showEditor"/>
     </component>`,
 
   data: function() {
@@ -159,8 +171,8 @@ Vue.component('list-item', {
     }
   },
   components: {
-    entry: TodoEntry,
-    editor: TodoEditor
+    entry: ItemEntry,
+    editor: ItemEditor
   }
 });
 
@@ -173,7 +185,7 @@ var app = new Vue({
   <div>
     <list-item-builder @todo-created="fetchData"/>
     <list-item-filter v-bind:config="filterConfig" @item-filters-changed="fetchData"/>
-    <ul>
+    <ul class="todo-list">
       <list-item v-for="item in todoList" v-bind:todo="item" v-bind:key="item._id" @todo-completed="fetchData" />
       </list-item>
     </ul>

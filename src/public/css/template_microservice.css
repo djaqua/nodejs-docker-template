@@ -4,9 +4,134 @@ body {
     width: 786px;
 }
 
-#root-div {
-    border: 2px solid #8080A0;
-    text-align: center;
+
+/*
+ [What it belongs to]-[what-its-role-is]
+
+ todo-root
+     |-- todo-builder (.todo-builder)
+     |-- todo-filter (.todo-filter)
+     |-- todo-list (.todo-list)
+          |** list-item
+               |:: item-entry (.list-item)
+               |       |-- <div> (.item-actions)
+               |       |      |-- <input> (input[type=checkbox])
+               |       |      |-- <span> (.action-icon)
+               |       |
+               |       |-- <label> (.item-text)
+               |
+               |:: item-editor (.list-item)
+                       |-- <div> (.item-actions)
+                       |             |-- <span> (.action-icon)
+                       |             |-- <span> (.action-icon)
+                       |
+                       |-- <input> (.item-text, input[type=text])
+
+*/
+
+
+@font-face {
+    font-family: "Inconsolata";
+    src: url("/font/Inconsolata.otf") format("opentype");
+}
+
+.todo-list {
+
+  font-family: Inconsolata;
+  height: 400px;
+  letter-spacing: 1px;
+  list-style-type: none;
+  margin: 0;
+  overflow-y: auto;
+  width: 100%;
+}
+
+input[type='text'] {
+  font-family: Inconsolata;
+  letter-spacing: 1px;
+}
+
+.list-item-builder  {
+  display: block;
+  font-size: 28pt;
+  font-weight: bold;
+  height: 50px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.list-item-filter {
+  border-bottom: 2px solid #0000C0;
+  margin: 7px auto;
+  padding: 7px;
+}
+
+.list-item-filter input[type='checkbox'] {
+  width: 50px;
+}
+
+.list-item-filter label {
+  color: #0000B0;
+  font-style: italic;
 }
 
 
+.todo-list  .list-item {
+  height: 30px;
+  margin: 2px 0;
+  max-width: 590px;
+  padding: 0;
+}
+
+.todo-list  .list-item  .item-actions {
+  display: inline-block;
+  height: 25px;
+  vertical-align: top;
+  width: 50px;
+}
+
+
+.todo-list  .list-item  .item-actions  .action-icon {
+  display: inline-block;
+  font-size: 12pt;
+  margin: 1px;
+  text-align: center;
+  width: 15px;
+}
+
+.fa-edit {
+  color: #0000B0;
+}
+.fa-save {
+  color: #00B000;
+}
+.fa-undo {
+  color: #B00000;
+}
+
+
+.todo-list  .list-item  .item-text {
+  display: inline-block;
+  font-size: 14pt;
+  height: 25px;
+  margin: 0;
+  width: 400px;
+}
+
+.todo-list  .list-item  input[type="text"] {
+  border: 1px solid #FF0000;  /* remind users that they've left an editor open */
+}
+
+.todo-list  .list-item  input[type="text"]:focus {
+   border: 1px solid #0000FF; /* it's ok if the editor in focus is open */
+}
+
+.todo-list  .list-item  label {
+   font-weight: bold;
+}
+
+.todo-list  .list-item .item-actions input[type='checkbox'] {
+  margin: 1px;
+  position: relative;
+  width: 15px;
+}
